@@ -3,7 +3,6 @@
 var bigPicture = document.querySelector('.big-picture');
 bigPicture.classList.remove('hidden');
 var bigPictureBlocks = bigPicture.querySelector('.social__comments');
-// var bigPictureComment = '<li class="social__comment social__comment--text"><img class="social__picture" src="example" alt="Аватар комментатора фотографии" width="35" height="35">example</li>';
 var similarListElement = document.querySelector('.pictures');
 var similarListTemplate = document.querySelector('#picture')
   .content
@@ -33,7 +32,7 @@ var MAX_LIKES = 200;
 var MIN_COMMENTS = 1;
 var MAX_COMMENTS = 6;
 var BIG_PICTURE_INDEX = 0;
-var MIN_AVATAR_NUMBER = 1;
+var MIN_AVATAR_NUMBER = 1; //эти две переменные отвечают за подбор случайного аватара (в задании src="img/avatar-{{случайное число от 1 до 6}}.svg")
 var MAX_AVATAR_NUMBER = 6;
 var AVATAR_HEIGHT = 35;
 var AVATAR_WIDTH = 35;
@@ -107,6 +106,7 @@ var generateDescription = function (descriptionArr) {
   return getRandomElement(descriptionArr);
 };
 
+// создаю массив картинок и присваиваю свойства
 var generatePictures = function (commentsArr, descriptionArr) {
   var picturesArr = [];
   for (var i = 0; i < COUNT_OF_PICS; i++) {
@@ -124,6 +124,7 @@ var generatePictures = function (commentsArr, descriptionArr) {
 
 var pictures = generatePictures(commentStrings, descriptions);
 
+// отрисовка маленьких картинок с лайками и кол-вом комментов
 var renderPhoto = function (picture) {
   var photoElement = similarListTemplate.cloneNode(true);
 
@@ -134,6 +135,7 @@ var renderPhoto = function (picture) {
   return photoElement;
 };
 
+//  вставляю разметку для комментов и прочего у большой картинки, кол-во блоков li зависит от кол-ва комментов
 var createNewElement = function (picture, commArray) {
   var arrLenght = countComments(commArray);
   for (var j = 0; j < arrLenght; j++) {
@@ -150,10 +152,11 @@ var createNewElement = function (picture, commArray) {
     avatarAndText.setAttribute('width', AVATAR_HEIGHT);
     avatarAndText.setAttribute('height', AVATAR_WIDTH);
     textBlock.insertAdjacentHTML('afterBegin', picture.commentsText[j]);
-    listElem.appendChild(avatarAndText);
   }
+  return listElem;
 };
 
+// числовые данные для имеющихся в разметке блоков у большой картинки
 var renderBigPicture = function (picture) {
   bigPicture.querySelector('img').src = picture.url;
   bigPicture.querySelector('.comments-count').textContent = picture.comments;
@@ -169,6 +172,6 @@ for (var i = 0; i < pictures.length; i++) {
   fragment.appendChild(renderPhoto(pictures[i]));
 }
 
-fragment.appendChild(renderBigPicture(pictures[BIG_PICTURE_INDEX]));
+renderBigPicture(pictures[BIG_PICTURE_INDEX]);
 
 similarListElement.appendChild(fragment);
