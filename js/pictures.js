@@ -2,6 +2,8 @@
 
 var bigPicture = document.querySelector('.big-picture');
 bigPicture.classList.remove('hidden');
+var comentCount = document.querySelector('.social__comment-count');
+var addComment = document.querySelector('.social__loadmore');
 var bigPictureBlocks = bigPicture.querySelector('.social__comments');
 var similarListElement = document.querySelector('.pictures');
 var similarListTemplate = document.querySelector('#picture')
@@ -32,11 +34,18 @@ var MAX_LIKES = 200;
 var MIN_COMMENTS = 1;
 var MAX_COMMENTS = 6;
 var BIG_PICTURE_INDEX = 0;
-var MIN_AVATAR_NUMBER = 1; //эти две переменные отвечают за подбор случайного аватара (в задании src="img/avatar-{{случайное число от 1 до 6}}.svg")
+var MIN_AVATAR_NUMBER = 1; // эти две переменные отвечают за подбор случайного аватара (в задании src="img/avatar-{{случайное число от 1 до 6}}.svg")
 var MAX_AVATAR_NUMBER = 6;
 var AVATAR_HEIGHT = 35;
 var AVATAR_WIDTH = 35;
 var AVATAR_ALT = 'Аватар комментатора фотографии';
+
+var hideBlock = function (block) {
+  block.classList.add('visually-hidden');
+};
+
+hideBlock(comentCount);
+hideBlock(addComment);
 
 var getRandomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
@@ -57,18 +66,18 @@ var generateSrcArray = function (countOfPics) {
 };
 
 function shuffle(array) {
-  var thisValue;
-  var thatValue;
+  var randomIndex;
+  var temp;
   for (var i = array.length - 1; i > 0; i--) {
-    thisValue = Math.floor(Math.random() * (i + 1));
-    thatValue = array[i];
-    array[i] = array[thisValue];
-    array[thisValue] = thatValue;
+    randomIndex = Math.floor(Math.random() * (i + 1));
+    temp = array[i];
+    array[i] = array[randomIndex];
+    array[randomIndex] = temp;
   }
   return array;
 }
 
-var srcArray = shuffle(generateSrcArray(COUNT_OF_PICS));
+var sourceLinks = shuffle(generateSrcArray(COUNT_OF_PICS));
 
 // создаю массив комментов для каждой фотки.
 var generateComments = function (commentsArr, min, max) {
@@ -95,7 +104,6 @@ var generateCommentsArray = function (picsCount, commentsArr, min, max) {
   return bigArray;
 };
 
-var commentsArray = generateCommentsArray(COUNT_OF_PICS, commentStrings, MIN_COMMENTS, MAX_COMMENTS);
 
 // считаю кол-во комментов в массиве
 var countComments = function (array) {
@@ -110,8 +118,9 @@ var generateDescription = function (descriptionArr) {
 var generatePictures = function (commentsArr, descriptionArr) {
   var picturesArr = [];
   for (var i = 0; i < COUNT_OF_PICS; i++) {
+    var commentsArray = generateCommentsArray(COUNT_OF_PICS, commentStrings, MIN_COMMENTS, MAX_COMMENTS);
     var picture = {
-      url: 'photos/' + (srcArray[i] + 1) + '.jpg',
+      url: 'photos/' + (sourceLinks[i] + 1) + '.jpg',
       likes: getRandomInt(MIN_LIKES, MAX_LIKES),
       comments: countComments(commentsArray[i]),
       commentsText: commentsArray[i],
@@ -163,7 +172,7 @@ var renderBigPicture = function (picture) {
   bigPicture.querySelector('.likes-count').textContent = picture.likes;
   bigPicture.querySelector('.social__caption').textContent = picture.description;
 
-  createNewElement(picture, commentsArray[BIG_PICTURE_INDEX]);
+  createNewElement(picture, picture.commentsText);
 };
 
 var fragment = document.createDocumentFragment();
