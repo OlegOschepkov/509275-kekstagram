@@ -95,14 +95,15 @@ var generateComments = function (commentsArr, min, max) {
 };
 
 // собираю из отдельных массивов одним большой с комментами. Не объеденил эти две функции потому что не получилось.
-var generateCommentsArray = function (picsCount, commentsArr, min, max) {
-  var bigArray = [];
-  for (var i = 0; i < picsCount; i++) {
-    var onePhotoComments = generateComments(commentsArr, min, max);
-    bigArray.push(onePhotoComments);
-  }
-  return bigArray;
-};
+// Пока спрячу этот кусок. Сейчас он без нужды, но вдруг потом пригодиться.
+// var generateCommentsArray = function (picsCount, commentsArr, min, max) {
+//   var bigArray = [];
+//   for (var i = 0; i < picsCount; i++) {
+//     var onePhotoComments = generateComments(commentsArr, min, max);
+//     bigArray.push(onePhotoComments);
+//   }
+//   return bigArray;
+// };
 
 
 // считаю кол-во комментов в массиве
@@ -118,12 +119,12 @@ var generateDescription = function (descriptionArr) {
 var generatePictures = function (commentsArr, descriptionArr) {
   var picturesArr = [];
   for (var i = 0; i < COUNT_OF_PICS; i++) {
-    var commentsArray = generateCommentsArray(COUNT_OF_PICS, commentStrings, MIN_COMMENTS, MAX_COMMENTS);
+    var commentsArray = generateComments(commentStrings, MIN_COMMENTS, MAX_COMMENTS);
     var picture = {
       url: 'photos/' + (sourceLinks[i] + 1) + '.jpg',
       likes: getRandomInt(MIN_LIKES, MAX_LIKES),
-      comments: countComments(commentsArray[i]),
-      commentsText: commentsArray[i],
+      comments: countComments(commentsArray),
+      commentsText: commentsArray,
       description: generateDescription(descriptionArr)
     };
     picturesArr.push(picture);
