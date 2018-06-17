@@ -1,7 +1,7 @@
 'use strict';
 
 var bigPicture = document.querySelector('.big-picture');
-bigPicture.classList.remove('hidden');
+// bigPicture.classList.remove('hidden');
 var comentCount = document.querySelector('.social__comment-count');
 var addComment = document.querySelector('.social__loadmore');
 var bigPictureBlocks = bigPicture.querySelector('.social__comments');
@@ -9,6 +9,9 @@ var similarListElement = document.querySelector('.pictures');
 var similarListTemplate = document.querySelector('#picture')
   .content
   .querySelector('.picture__link');
+similarListTemplate.setAttribute('data-index', 0);
+bigPicture.querySelector('.close');
+
 
 var commentStrings = [
   'Всё отлично!',
@@ -59,7 +62,7 @@ var getRandomElement = function (array) {
 // создаю и перемешиваю массив номеров фоток
 var generateSrcArray = function (countOfPics) {
   var array = [];
-  for (i = 0; i < countOfPics; i++) {
+  for (var i = 0; i < countOfPics; i++) {
     array.push(i);
   }
   return array;
@@ -145,6 +148,10 @@ var renderPhoto = function (picture) {
   return photoElement;
 };
 
+var setDataAttrib = function (element, j) {
+  element.setAttribute('data-index', j + 1);
+};
+
 //  вставляю разметку для комментов и прочего у большой картинки, кол-во блоков li зависит от кол-ва комментов
 var createNewElement = function (picture, commArray) {
   var arrLenght = countComments(commArray);
@@ -172,16 +179,213 @@ var renderBigPicture = function (picture) {
   bigPicture.querySelector('.comments-count').textContent = picture.comments;
   bigPicture.querySelector('.likes-count').textContent = picture.likes;
   bigPicture.querySelector('.social__caption').textContent = picture.description;
+  bigPicture.classList.remove('hidden');
 
   createNewElement(picture, picture.commentsText);
 };
 
 var fragment = document.createDocumentFragment();
 
-for (var i = 0; i < pictures.length; i++) {
-  fragment.appendChild(renderPhoto(pictures[i]));
+for (var j = 0; j < pictures.length; j++) {
+  fragment.appendChild(renderPhoto(pictures[j]));
+  setDataAttrib(similarListTemplate, j);
 }
 
-renderBigPicture(pictures[BIG_PICTURE_INDEX]);
-
 similarListElement.appendChild(fragment);
+
+// спрячу .social__comment-count и .social__loadmore
+var hideUnnecesary = function (blockClass) {
+  var htmlBlock = document.querySelector(blockClass);
+  htmlBlock.classList.add('.visually-hidden');
+};
+
+hideUnnecesary('.social__comment-count');
+hideUnnecesary('.social__loadmore');
+
+// закрытие/открытие большого фото.............
+var openBigPicture = function (collection) {
+  for (var i = 0; i < collection.length; i++) {
+    collection[i].addEventListener('click', function (evt) {
+      var x = evt.currentTarget.getAttribute('data-index');
+      renderBigPicture(pictures[x]);
+      console.log(evt.target);
+    });
+  }
+};
+
+var smallPictures = document.querySelectorAll('.picture__link');
+
+openBigPicture(smallPictures);
+
+var closeIt = function (element) {
+  var close = element.querySelector('.cancel');
+  close.addEventListener('click', function () {
+    element.classList.add('hidden');
+  });
+};
+
+closeIt(bigPicture);
+
+// Загрузка изображения и показ формы редактирования + закрытие
+var uploadFile = document.querySelector('#upload-file');
+var imageEditor = document.querySelector('.img-upload__overlay');
+
+uploadFile.addEventListener('change', function () {
+  imageEditor.classList.remove('hidden');
+});
+
+var closeImageEditor = imageEditor.querySelector('.cancel');
+
+closeImageEditor.addEventListener('click', function () {
+  closeIt(imageEditor);
+  imageEditor.removeAttribute('value');
+  clearClassAndStyle(previewImg);
+});
+
+// Применение эффекта и изменение размера
+var effect = document.querySelectorAll('.effects__item');
+var previewImgBlock = document.querySelector('.img-upload__preview');
+var previewImg = previewImgBlock.querySelector('img');
+
+var clearClassAndStyle = function (element) {
+  var classList = element.classList;
+  while (classList.length > 0) {
+    classList.remove(classList.item(0));
+  }
+  previewImg.removeAttribute('style');
+};
+
+var getEffectClass = function (element) {
+  var block = element.querySelector('span');
+  return block.classList.item(1); // забираю второй класс. По идее надо делать перебор массива классов, и искать елемент со свойством effects__preview--... но как искать по Части свойства?? DataAttribute повесить сименем класса
+};
+
+var setEffectClass = function (value, img) {
+  clearClassAndStyle(img);
+  img.classList.add(value);
+};
+
+var applyEffect = function (collection) {
+  for (var i = 0; i < collection.length; i++) {
+    collection[i].addEventListener('click', function (evt) {
+      setEffectClass(getEffectClass(evt.currentTarget), previewImg); // разницу между target и currentTarget не понял.
+      console.log(evt.target);
+    });
+  }
+};
+
+applyEffect(effect);
+
+var sliderPin = document.querySelector('.scale__pin');
+var slider = document.querySelector('.scale__line');
+var scaleValue = document.querySelector('.scale__value');
+// var imgScale = document.querySelector('.img-upload__scale'); так и не смог спрятать слайдер. добавлял класс и внутри setNewStyle и в обработчике клика на эффекты - не срабатывает.
+
+var proportion = function (xOfSlider, xOfPin) {
+  var percentage = Math.floor(100 / (slider.offsetWidth / (xOfPin.left - xOfSlider.left)));
+  return percentage;
+};
+
+var setValueScale = function (xOfSlider, xOfPin) {
+  scaleValue.setAttribute('value', proportion(xOfSlider, xOfPin));
+};
+
+var chooseOneOfThree = function (number) {
+  var choosen;
+  if (number <= 0.33) {
+    choosen = 1;
+  } else if (number >= 0.66) {
+    choosen = 3;
+  } else {
+    choosen = 2;
+  }
+  return choosen;
+};
+
+var setNewStyle = function (block, xOfSlider, xOfPin) {
+  var qty;
+  var effectName;
+  var newStyle;
+  var temp = (1 / 100) * proportion(xOfSlider, xOfPin);
+  if (block.classList.contains('effects__preview--none')) {
+    qty = 0;
+    effectName = 'none';
+  } else if (block.classList.contains('effects__preview--chrome')) {
+    qty = 1 * temp;
+    effectName = 'grayscale';
+  } else if (block.classList.contains('effects__preview--sepia')) {
+    qty = 1 * temp;
+    effectName = 'sepia';
+  } else if (block.classList.contains('effects__preview--marvin')) {
+    qty = 100 * temp + '%';
+    effectName = 'invert';
+  } else if (block.classList.contains('effects__preview--phobos')) {
+    qty = chooseOneOfThree(temp) + 'px';
+    effectName = 'blur';
+  } else if (block.classList.contains('effects__preview--heat')) {
+    qty = chooseOneOfThree(temp);
+    effectName = 'brightness';
+  }
+  newStyle = 'filter: ' + effectName + '(' + qty + ');';
+  return newStyle;
+};
+
+sliderPin.addEventListener('mouseup', function () {
+  var sliderX = slider.getBoundingClientRect();
+  var pinX = sliderPin.getBoundingClientRect();
+  setValueScale(sliderX, pinX);
+  previewImg.removeAttribute('style');
+  previewImg.setAttribute('style', setNewStyle(previewImg, sliderX, pinX));
+  setValueSize(qty);
+}); //  баг. при переключении эффектов отображается размер в процентах от прежней фотки, хотя при вызове setValueSize(qty) должен сбрасываться.
+
+//  а теперь изменяем размеры
+var minusSize = document.querySelector('.resize__control--minus');
+var plusSize = document.querySelector('.resize__control--plus');
+var valueSize = document.querySelector('.resize__control--value');
+var qty = 100;
+var MAX_QTY = 100;
+var MIN_QTY = 25;
+var QTY_STEP = 25;
+
+var oversizeCheck = function (number) {
+  if (number >= MAX_QTY) {
+    number = MAX_QTY;
+  } else if (number <= MIN_QTY) {
+    number = MIN_QTY;
+  }
+  return number;
+};
+
+var makeResize = function (number) {
+  var newSize;
+  newSize = 'transform: scale(' + (number / 100) + ');';
+  return newSize;
+};
+
+var setValueSize = function (size) {
+  valueSize.setAttribute('value', size + '%');
+  previewImg.setAttribute('style', makeResize(size));
+};
+
+setValueSize(qty);
+
+var setNewSize = function (step, increase) {
+  if (increase === 1) {
+    qty = qty + step;
+  } else {
+    qty = qty - step;
+  }
+  var size = 'transform: scale(' + (oversizeCheck(qty) / 100) + ');';
+  setValueSize(oversizeCheck(qty));
+  return size;
+};
+
+// а вот тут глюк, если нажать 3 раза на плюс после значения размера 1, то потом надо нажать три раза на минус, прежде чем размер начнет уменьшаться. И наоборот.
+minusSize.addEventListener('click', function () {
+  setNewSize(QTY_STEP, 0);
+});
+
+plusSize.addEventListener('click', function () {
+  setNewSize(QTY_STEP, 1);
+});
