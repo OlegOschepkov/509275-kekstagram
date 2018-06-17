@@ -36,7 +36,7 @@ var MIN_LIKES = 15;
 var MAX_LIKES = 200;
 var MIN_COMMENTS = 1;
 var MAX_COMMENTS = 6;
-var BIG_PICTURE_INDEX = 0;
+// var BIG_PICTURE_INDEX = 0;
 var MIN_AVATAR_NUMBER = 1; // эти две переменные отвечают за подбор случайного аватара (в задании src="img/avatar-{{случайное число от 1 до 6}}.svg")
 var MAX_AVATAR_NUMBER = 6;
 var AVATAR_HEIGHT = 35;
@@ -96,18 +96,6 @@ var generateComments = function (commentsArr, min, max) {
   }
   return messageArray;
 };
-
-// собираю из отдельных массивов одним большой с комментами. Не объеденил эти две функции потому что не получилось.
-// Пока спрячу этот кусок. Сейчас он без нужды, но вдруг потом пригодиться.
-// var generateCommentsArray = function (picsCount, commentsArr, min, max) {
-//   var bigArray = [];
-//   for (var i = 0; i < picsCount; i++) {
-//     var onePhotoComments = generateComments(commentsArr, min, max);
-//     bigArray.push(onePhotoComments);
-//   }
-//   return bigArray;
-// };
-
 
 // считаю кол-во комментов в массиве
 var countComments = function (array) {
@@ -202,13 +190,12 @@ var hideUnnecesary = function (blockClass) {
 hideUnnecesary('.social__comment-count');
 hideUnnecesary('.social__loadmore');
 
-// закрытие/открытие большого фото.............
+// закрытие/открытие большого фото
 var openBigPicture = function (collection) {
   for (var i = 0; i < collection.length; i++) {
     collection[i].addEventListener('click', function (evt) {
       var x = evt.currentTarget.getAttribute('data-index');
       renderBigPicture(pictures[x]);
-      console.log(evt.target);
     });
   }
 };
@@ -255,9 +242,30 @@ var clearClassAndStyle = function (element) {
   previewImg.removeAttribute('style');
 };
 
-var getEffectClass = function (element) {
+var effectList = document.querySelectorAll('.effects__preview');
+
+var getEffectToData = function (element) {
+  var name;
+  if (element.classList.contains('effects__preview--none')) {
+    name = 'effects__preview--none';
+  } else if (element.classList.contains('effects__preview--chrome')) {
+    name = 'effects__preview--chrome';
+  } else if (element.classList.contains('effects__preview--sepia')) {
+    name = 'effects__preview--sepia';
+  } else if (element.classList.contains('effects__preview--marvin')) {
+    name = 'effects__preview--marvin';
+  } else if (element.classList.contains('effects__preview--phobos')) {
+    name = 'effects__preview--phobos';
+  } else if (element.classList.contains('effects__preview--heat')) {
+    name = 'effects__preview--heat';
+  }
+  return name;
+};
+
+var getEffectName = function (element) {
   var block = element.querySelector('span');
-  return block.classList.item(1); // забираю второй класс. По идее надо делать перебор массива классов, и искать елемент со свойством effects__preview--... но как искать по Части свойства?? DataAttribute повесить сименем класса
+  block.setAttribute('data-effect', getEffectToData(block, effectList));
+  return block.dataset.effect;
 };
 
 var setEffectClass = function (value, img) {
@@ -268,8 +276,7 @@ var setEffectClass = function (value, img) {
 var applyEffect = function (collection) {
   for (var i = 0; i < collection.length; i++) {
     collection[i].addEventListener('click', function (evt) {
-      setEffectClass(getEffectClass(evt.currentTarget), previewImg); // разницу между target и currentTarget не понял.
-      console.log(evt.target);
+      setEffectClass(getEffectName(evt.currentTarget), previewImg);
     });
   }
 };
@@ -336,8 +343,7 @@ sliderPin.addEventListener('mouseup', function () {
   setValueScale(sliderX, pinX);
   previewImg.removeAttribute('style');
   previewImg.setAttribute('style', setNewStyle(previewImg, sliderX, pinX));
-  setValueSize(qty);
-}); //  баг. при переключении эффектов отображается размер в процентах от прежней фотки, хотя при вызове setValueSize(qty) должен сбрасываться.
+});
 
 //  а теперь изменяем размеры
 var minusSize = document.querySelector('.resize__control--minus');
