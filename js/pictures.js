@@ -31,7 +31,7 @@ var descriptions = [
   'Вот это тачка!'
 ];
 
-var COUNT_OF_PICS = 25;
+var COUNT_OF_PICTURES = 25;
 var MIN_LIKES = 15;
 var MAX_LIKES = 200;
 var MIN_COMMENTS = 1;
@@ -60,9 +60,9 @@ var getRandomElement = function (array) {
 
 
 // создаю и перемешиваю массив номеров фоток
-var generateSrcArray = function (countOfPics) {
+var generateSrcArray = function (countOfPicures) {
   var array = [];
-  for (var i = 0; i < countOfPics; i++) {
+  for (var i = 0; i < countOfPicures; i++) {
     array.push(i);
   }
   return array;
@@ -80,7 +80,7 @@ function shuffle(array) {
   return array;
 }
 
-var sourceLinks = shuffle(generateSrcArray(COUNT_OF_PICS));
+var sourceLinks = shuffle(generateSrcArray(COUNT_OF_PICTURES));
 
 // создаю массив комментов для каждой фотки.
 var generateComments = function (commentsArr, min, max) {
@@ -109,7 +109,7 @@ var generateDescription = function (descriptionArr) {
 // создаю массив картинок и присваиваю свойства
 var generatePictures = function (commentsArr, descriptionArr) {
   var picturesArr = [];
-  for (var i = 0; i < COUNT_OF_PICS; i++) {
+  for (var i = 0; i < COUNT_OF_PICTURES; i++) {
     var commentsArray = generateComments(commentStrings, MIN_COMMENTS, MAX_COMMENTS);
     var picture = {
       url: 'photos/' + (sourceLinks[i] + 1) + '.jpg',
@@ -198,9 +198,7 @@ var getIndexAndRender = function (evt) {
 
 var addBigPictureListener = function (collection) {
   for (var i = 0; i < collection.length; i++) {
-    collection[i].addEventListener('click', function (evt) {
-      getIndexAndRender(evt);
-    });
+    collection[i].addEventListener('click', getIndexAndRender);
   }
 };
 
@@ -225,7 +223,6 @@ findPopupCloseButton(bigPicture).addEventListener('click', function () {
 // Загрузка изображения и показ формы редактирования + закрытие
 var uploadFile = document.querySelector('#upload-file');
 var imageEditor = document.querySelector('.img-upload__overlay');
-// imageEditor.classList.remove('hidden');
 
 uploadFile.addEventListener('change', function () {
   imageEditor.classList.remove('hidden');
@@ -235,6 +232,8 @@ findPopupCloseButton(imageEditor).addEventListener('click', function () {
   addClassHidden(imageEditor);
   imageEditor.removeAttribute('value');
   clearClassAndStyle(previewImg);
+  setValueSize(defaultQuantity);
+  quantity = defaultQuantity;
 });
 
 // Применение эффекта и изменение размера
@@ -296,8 +295,9 @@ var setEffectClass = function (value, img) {
 var applyEffect = function (collection) {
   for (var i = 0; i < collection.length; i++) {
     collection[i].addEventListener('click', function (evt) {
+      setValueSize(defaultQuantity);
       setEffectClass(getEffectClass(evt.currentTarget), previewImg);
-      setValueSize(defaultQty);
+      quantity = defaultQuantity;
     });
   }
 };
@@ -318,42 +318,35 @@ var setValueScale = function (xOfSlider, xOfPin) {
 };
 
 var chooseOneOfThree = function (number) {
-  var choosen;
-  if (number <= 0.33) {
-    choosen = 1;
-  } else if (number >= 0.66) {
-    choosen = 3;
-  } else {
-    choosen = 2;
-  }
+  var choosen = Math.ceil(number * 3);
   return choosen;
 };
 
 var setNewStyle = function (block, xOfSlider, xOfPin) {
-  var qty;
+  var quantity;
   var effectName;
   var newStyle;
   var temp = (1 / 100) * proportion(xOfSlider, xOfPin);
   if (block.classList.contains('effects__preview--none')) {
-    qty = 0;
+    quantity = 0;
     effectName = 'none';
   } else if (block.classList.contains('effects__preview--chrome')) {
-    qty = 1 * temp;
+    quantity = 1 * temp;
     effectName = 'grayscale';
   } else if (block.classList.contains('effects__preview--sepia')) {
-    qty = 1 * temp;
+    quantity = 1 * temp;
     effectName = 'sepia';
   } else if (block.classList.contains('effects__preview--marvin')) {
-    qty = 100 * temp + '%';
+    quantity = 100 * temp + '%';
     effectName = 'invert';
   } else if (block.classList.contains('effects__preview--phobos')) {
-    qty = chooseOneOfThree(temp) + 'px';
+    quantity = chooseOneOfThree(temp) + 'px';
     effectName = 'blur';
   } else if (block.classList.contains('effects__preview--heat')) {
-    qty = chooseOneOfThree(temp);
+    quantity = chooseOneOfThree(temp);
     effectName = 'brightness';
   }
-  newStyle = 'filter: ' + effectName + '(' + qty + ');';
+  newStyle = 'filter: ' + effectName + '(' + quantity + ');';
   return newStyle;
 };
 
@@ -369,16 +362,16 @@ sliderPin.addEventListener('mouseup', function () {
 var minusSize = document.querySelector('.resize__control--minus');
 var plusSize = document.querySelector('.resize__control--plus');
 var valueSize = document.querySelector('.resize__control--value');
-var defaultQty = 100;
-var MAX_QTY = 100;
-var MIN_QTY = 25;
-var QTY_STEP = 25;
+var defaultQuantity = 100;
+var MAX_QUANITY = 100;
+var MIN_QUANITY = 25;
+var QUANITY_STEP = 25;
 
 var oversizeCheck = function (number) {
-  if (number >= MAX_QTY) {
-    number = MAX_QTY;
-  } else if (number <= MIN_QTY) {
-    number = MIN_QTY;
+  if (number >= MAX_QUANITY) {
+    number = MAX_QUANITY;
+  } else if (number <= MIN_QUANITY) {
+    number = MIN_QUANITY;
   }
   return number;
 };
@@ -394,25 +387,26 @@ var setValueSize = function (size) {
   previewImg.setAttribute('style', makeResize(size));
 };
 
-setValueSize(defaultQty);
+setValueSize(defaultQuantity);
+
+var quantity = defaultQuantity;
 
 var setNewSize = function (step, increase) {
-  var qty = defaultQty;
   if (increase === 1) {
-    qty = qty + step;
+    quantity = quantity + step;
   } else {
-    qty = qty - step;
+    quantity = quantity - step;
   }
-  qty = oversizeCheck(qty);
-  var size = 'transform: scale(' + (qty / 100) + ');';
-  setValueSize(qty);
+  quantity = oversizeCheck(quantity);
+  setValueSize(quantity);
+  var size = quantity / 100;
   return size;
 };
 
 minusSize.addEventListener('click', function () {
-  setNewSize(QTY_STEP, 0);
+  setNewSize(QUANITY_STEP, 0);
 });
 
 plusSize.addEventListener('click', function () {
-  setNewSize(QTY_STEP, 1);
+  setNewSize(QUANITY_STEP, 1);
 });
