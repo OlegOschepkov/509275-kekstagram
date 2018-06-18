@@ -355,7 +355,9 @@ sliderPin.addEventListener('mouseup', function () {
   var pinX = sliderPin.getBoundingClientRect();
   setValueScale(sliderX, pinX);
   previewImg.removeAttribute('style');
+  previewImg.setAttribute('data-effect', setNewStyle(previewImg, sliderX, pinX));
   previewImg.setAttribute('style', setNewStyle(previewImg, sliderX, pinX));
+  updatePreviewStyle();
 });
 
 //  а теперь изменяем размеры
@@ -384,7 +386,7 @@ var makeResize = function (number) {
 
 var setValueSize = function (size) {
   valueSize.setAttribute('value', size + '%');
-  previewImg.setAttribute('style', makeResize(size));
+  previewImg.setAttribute('data-size', makeResize(size));
 };
 
 setValueSize(defaultQuantity);
@@ -400,6 +402,7 @@ var setNewSize = function (step, increase) {
   quantity = oversizeCheck(quantity);
   setValueSize(quantity);
   var size = quantity / 100;
+  updatePreviewStyle();
   return size;
 };
 
@@ -410,3 +413,14 @@ minusSize.addEventListener('click', function () {
 plusSize.addEventListener('click', function () {
   setNewSize(QUANITY_STEP, 1);
 });
+
+var updatePreviewStyle = function () {
+  var dataEffect = previewImg.getAttribute('data-effect');
+  var dataSize = previewImg.getAttribute('data-size');
+  if (dataEffect === null) {
+    dataEffect = '';
+  } else if (dataSize === null) {
+    dataSize = '';
+  }
+  previewImg.setAttribute('style', dataEffect + dataSize);
+};
