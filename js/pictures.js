@@ -208,7 +208,7 @@ var smallPictures = document.querySelectorAll('.picture__link');
 
 addBigPictureListener(smallPictures);
 
-var closePopup = function (element) {
+var addClassHidden = function (element) {
   element.classList.add('hidden');
 };
 
@@ -217,22 +217,22 @@ var findPopupCloseButton = function (element) {
 };
 
 findPopupCloseButton(bigPicture).addEventListener('click', function () {
-  closePopup(bigPicture);
+  addClassHidden(bigPicture);
 });
 
-// closePopup(bigPicture);
+// addClassHidden(bigPicture);
 
 // Загрузка изображения и показ формы редактирования + закрытие
 var uploadFile = document.querySelector('#upload-file');
 var imageEditor = document.querySelector('.img-upload__overlay');
-imageEditor.classList.remove('hidden');
+// imageEditor.classList.remove('hidden');
 
 uploadFile.addEventListener('change', function () {
   imageEditor.classList.remove('hidden');
 });
 
 findPopupCloseButton(imageEditor).addEventListener('click', function () {
-  closePopup(imageEditor);
+  addClassHidden(imageEditor);
   imageEditor.removeAttribute('value');
   clearClassAndStyle(previewImg);
 });
