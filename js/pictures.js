@@ -1,7 +1,7 @@
 'use strict';
 
 var bigPicture = document.querySelector('.big-picture');
-bigPicture.classList.remove('hidden');
+// bigPicture.classList.remove('hidden');
 var comentCount = document.querySelector('.social__comment-count');
 var addComment = document.querySelector('.social__loadmore');
 var bigPictureBlocks = bigPicture.querySelector('.social__comments');
@@ -9,6 +9,9 @@ var similarListElement = document.querySelector('.pictures');
 var similarListTemplate = document.querySelector('#picture')
   .content
   .querySelector('.picture__link');
+similarListTemplate.setAttribute('data-index', 0);
+bigPicture.querySelector('.close');
+
 
 var commentStrings = [
   'Всё отлично!',
@@ -28,12 +31,12 @@ var descriptions = [
   'Вот это тачка!'
 ];
 
-var COUNT_OF_PICS = 25;
+var COUNT_OF_PICTURES = 25;
 var MIN_LIKES = 15;
 var MAX_LIKES = 200;
 var MIN_COMMENTS = 1;
 var MAX_COMMENTS = 6;
-var BIG_PICTURE_INDEX = 0;
+// var BIG_PICTURE_INDEX = 0;
 var MIN_AVATAR_NUMBER = 1; // эти две переменные отвечают за подбор случайного аватара (в задании src="img/avatar-{{случайное число от 1 до 6}}.svg")
 var MAX_AVATAR_NUMBER = 6;
 var AVATAR_HEIGHT = 35;
@@ -57,9 +60,9 @@ var getRandomElement = function (array) {
 
 
 // создаю и перемешиваю массив номеров фоток
-var generateSrcArray = function (countOfPics) {
+var generateSrcArray = function (countOfPicures) {
   var array = [];
-  for (i = 0; i < countOfPics; i++) {
+  for (var i = 0; i < countOfPicures; i++) {
     array.push(i);
   }
   return array;
@@ -77,7 +80,7 @@ function shuffle(array) {
   return array;
 }
 
-var sourceLinks = shuffle(generateSrcArray(COUNT_OF_PICS));
+var sourceLinks = shuffle(generateSrcArray(COUNT_OF_PICTURES));
 
 // создаю массив комментов для каждой фотки.
 var generateComments = function (commentsArr, min, max) {
@@ -94,18 +97,6 @@ var generateComments = function (commentsArr, min, max) {
   return messageArray;
 };
 
-// собираю из отдельных массивов одним большой с комментами. Не объеденил эти две функции потому что не получилось.
-// Пока спрячу этот кусок. Сейчас он без нужды, но вдруг потом пригодиться.
-// var generateCommentsArray = function (picsCount, commentsArr, min, max) {
-//   var bigArray = [];
-//   for (var i = 0; i < picsCount; i++) {
-//     var onePhotoComments = generateComments(commentsArr, min, max);
-//     bigArray.push(onePhotoComments);
-//   }
-//   return bigArray;
-// };
-
-
 // считаю кол-во комментов в массиве
 var countComments = function (array) {
   return array.length;
@@ -118,7 +109,7 @@ var generateDescription = function (descriptionArr) {
 // создаю массив картинок и присваиваю свойства
 var generatePictures = function (commentsArr, descriptionArr) {
   var picturesArr = [];
-  for (var i = 0; i < COUNT_OF_PICS; i++) {
+  for (var i = 0; i < COUNT_OF_PICTURES; i++) {
     var commentsArray = generateComments(commentStrings, MIN_COMMENTS, MAX_COMMENTS);
     var picture = {
       url: 'photos/' + (sourceLinks[i] + 1) + '.jpg',
@@ -143,6 +134,10 @@ var renderPhoto = function (picture) {
   photoElement.querySelector('.picture__stat--likes').textContent = picture.likes;
 
   return photoElement;
+};
+
+var setDataAttrib = function (element, j) {
+  element.setAttribute('data-index', j + 1);
 };
 
 //  вставляю разметку для комментов и прочего у большой картинки, кол-во блоков li зависит от кол-ва комментов
@@ -172,16 +167,263 @@ var renderBigPicture = function (picture) {
   bigPicture.querySelector('.comments-count').textContent = picture.comments;
   bigPicture.querySelector('.likes-count').textContent = picture.likes;
   bigPicture.querySelector('.social__caption').textContent = picture.description;
+  bigPicture.classList.remove('hidden');
 
   createNewElement(picture, picture.commentsText);
 };
 
 var fragment = document.createDocumentFragment();
 
-for (var i = 0; i < pictures.length; i++) {
-  fragment.appendChild(renderPhoto(pictures[i]));
+for (var j = 0; j < pictures.length; j++) {
+  fragment.appendChild(renderPhoto(pictures[j]));
+  setDataAttrib(similarListTemplate, j);
 }
 
-renderBigPicture(pictures[BIG_PICTURE_INDEX]);
-
 similarListElement.appendChild(fragment);
+
+// спрячу .social__comment-count и .social__loadmore
+var hideUnnecesary = function (blockClass) {
+  var htmlBlock = document.querySelector(blockClass);
+  htmlBlock.classList.add('.visually-hidden');
+};
+
+hideUnnecesary('.social__comment-count');
+hideUnnecesary('.social__loadmore');
+
+// закрытие/открытие большого фото
+var getIndexAndRender = function (evt) {
+  var x = evt.currentTarget.getAttribute('data-index');
+  renderBigPicture(pictures[x]);
+};
+
+var addBigPictureListener = function (collection) {
+  for (var i = 0; i < collection.length; i++) {
+    collection[i].addEventListener('click', getIndexAndRender);
+  }
+};
+
+var smallPictures = document.querySelectorAll('.picture__link');
+
+addBigPictureListener(smallPictures);
+
+var addClassHidden = function (element) {
+  element.classList.add('hidden');
+};
+
+var findPopupCloseButton = function (element) {
+  return element.querySelector('.cancel');
+};
+
+findPopupCloseButton(bigPicture).addEventListener('click', function () {
+  addClassHidden(bigPicture);
+});
+
+// addClassHidden(bigPicture);
+
+// Загрузка изображения и показ формы редактирования + закрытие
+var uploadFile = document.querySelector('#upload-file');
+var imageEditor = document.querySelector('.img-upload__overlay');
+var effectValue = '';
+var sizeValue = '';
+
+uploadFile.addEventListener('change', function () {
+  imageEditor.classList.remove('hidden');
+});
+
+findPopupCloseButton(imageEditor).addEventListener('click', function () {
+  addClassHidden(imageEditor);
+  imageEditor.removeAttribute('value');
+  clearClassAndStyle(previewImg);
+  setValueSize(defaultQuantity);
+  quantity = defaultQuantity;
+});
+
+// Применение эффекта и изменение размера
+var effect = document.querySelectorAll('.effects__item');
+var previewImgBlock = document.querySelector('.img-upload__preview');
+var previewImg = previewImgBlock.querySelector('img');
+
+var clearClassAndStyle = function (element) {
+  // var classList = element.classList;
+  // while (classList.length > 0) {
+  //   classList.remove(classList.item(0));
+  // }
+  element.className = '';
+  element.setAttribute('style', '');
+};
+
+// var effectList = document.querySelectorAll('.effects__preview');
+
+// var getEffectToData = function (element) {
+//   var name;
+//   if (element.classList.contains('effects__preview--none')) {
+//     name = 'effects__preview--none';
+//   } else if (element.classList.contains('effects__preview--chrome')) {
+//     name = 'effects__preview--chrome';
+//   } else if (element.classList.contains('effects__preview--sepia')) {
+//     name = 'effects__preview--sepia';
+//   } else if (element.classList.contains('effects__preview--marvin')) {
+//     name = 'effects__preview--marvin';
+//   } else if (element.classList.contains('effects__preview--phobos')) {
+//     name = 'effects__preview--phobos';
+//   } else if (element.classList.contains('effects__preview--heat')) {
+//     name = 'effects__preview--heat';
+//   }
+//   return name;
+// };
+//
+// var getEffectName = function (element) {
+//   var block = element.querySelector('span');
+//   // block.getAttribute('data-effect', getEffectToData(block, effectList));
+//   return block.dataset.effect;
+// }; Пока спрячу, но удалять не буду, а вдруг пригодиться??
+
+var getEffectClass = function (element) {
+  var span = element.querySelector('span');
+  var effectClass;
+  for (var i = 0; i < span.classList.length; i++) {
+    if (span.classList.item(i).startsWith('effects__preview--')) {
+      effectClass = span.classList.item(i);
+    }
+  }
+  return effectClass;
+};
+
+var setEffectClass = function (value, img) {
+  clearClassAndStyle(img);
+  img.classList.add(value);
+};
+
+var applyEffect = function (collection) {
+  for (var i = 0; i < collection.length; i++) {
+    collection[i].addEventListener('click', function (evt) {
+      setValueSize(defaultQuantity);
+      setEffectClass(getEffectClass(evt.currentTarget), previewImg);
+      quantity = defaultQuantity;
+      effectValue = '';
+    });
+  }
+};
+
+applyEffect(effect);
+
+var sliderPin = document.querySelector('.scale__pin');
+var slider = document.querySelector('.scale__line');
+var scaleValue = document.querySelector('.scale__value');
+
+var proportion = function (xOfSlider, xOfPin) {
+  var percentage = Math.floor(100 / (slider.offsetWidth / (xOfPin.left - xOfSlider.left)));
+  return percentage;
+};
+
+var setValueScale = function (xOfSlider, xOfPin) {
+  scaleValue.setAttribute('value', proportion(xOfSlider, xOfPin));
+};
+
+var chooseOneOfThree = function (number) {
+  var choosen = Math.ceil(number * 3);
+  return choosen;
+};
+
+var setNewStyle = function (block, xOfSlider, xOfPin) {
+  var quantity;
+  var effectName;
+  var newStyle;
+  var temp = (1 / 100) * proportion(xOfSlider, xOfPin);
+  if (block.classList.contains('effects__preview--none')) {
+    quantity = 0;
+    effectName = 'none';
+  } else if (block.classList.contains('effects__preview--chrome')) {
+    quantity = 1 * temp;
+    effectName = 'grayscale';
+  } else if (block.classList.contains('effects__preview--sepia')) {
+    quantity = 1 * temp;
+    effectName = 'sepia';
+  } else if (block.classList.contains('effects__preview--marvin')) {
+    quantity = 100 * temp + '%';
+    effectName = 'invert';
+  } else if (block.classList.contains('effects__preview--phobos')) {
+    quantity = chooseOneOfThree(temp) + 'px';
+    effectName = 'blur';
+  } else if (block.classList.contains('effects__preview--heat')) {
+    quantity = chooseOneOfThree(temp);
+    effectName = 'brightness';
+  }
+  newStyle = 'filter: ' + effectName + '(' + quantity + ');';
+  effectValue = newStyle;
+  return newStyle;
+};
+
+sliderPin.addEventListener('mouseup', function () {
+  var sliderX = slider.getBoundingClientRect();
+  var pinX = sliderPin.getBoundingClientRect();
+  setValueScale(sliderX, pinX);
+  previewImg.removeAttribute('style');
+  previewImg.setAttribute('style', setNewStyle(previewImg, sliderX, pinX));
+  updatePreviewStyle(effectValue, sizeValue);
+});
+
+//  а теперь изменяем размеры
+var minusSize = document.querySelector('.resize__control--minus');
+var plusSize = document.querySelector('.resize__control--plus');
+var valueSize = document.querySelector('.resize__control--value');
+var defaultQuantity = 100;
+var MAX_QUANITY = 100;
+var MIN_QUANITY = 25;
+var QUANITY_STEP = 25;
+
+var oversizeCheck = function (number) {
+  if (number >= MAX_QUANITY) {
+    number = MAX_QUANITY;
+  } else if (number <= MIN_QUANITY) {
+    number = MIN_QUANITY;
+  }
+  return number;
+};
+
+var makeResize = function (number) {
+  var newSize;
+  newSize = 'transform: scale(' + (number / 100) + ');';
+  sizeValue = newSize;
+  return newSize;
+};
+
+var setValueSize = function (size) {
+  valueSize.setAttribute('value', size + '%');
+  previewImg.setAttribute('style', makeResize(size));
+};
+
+setValueSize(defaultQuantity);
+
+var quantity = defaultQuantity;
+
+var setNewSize = function (step, increase) {
+  if (increase === 1) {
+    quantity = quantity + step;
+  } else {
+    quantity = quantity - step;
+  }
+  quantity = oversizeCheck(quantity);
+  setValueSize(quantity);
+  var size = quantity / 100;
+  return size;
+};
+
+minusSize.addEventListener('click', function () {
+  setNewSize(QUANITY_STEP, 0);
+  updatePreviewStyle(effectValue, sizeValue);
+});
+
+plusSize.addEventListener('click', function () {
+  setNewSize(QUANITY_STEP, 1);
+  updatePreviewStyle(effectValue, sizeValue);
+});
+
+var updatePreviewStyle = function (effectDescription, sizeDescription) {
+  if (effectDescription === null || undefined) {
+    effectDescription = '';
+  } else if (sizeDescription === null || undefined) {
+    sizeDescription = '';
+  }
+  previewImg.setAttribute('style', effectDescription + sizeDescription);
+};
