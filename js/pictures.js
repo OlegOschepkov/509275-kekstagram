@@ -191,40 +191,48 @@ hideUnnecesary('.social__comment-count');
 hideUnnecesary('.social__loadmore');
 
 // закрытие/открытие большого фото
-var openBigPicture = function (collection) {
+var getIndexAndRender = function (evt) {
+  var x = evt.currentTarget.getAttribute('data-index');
+  renderBigPicture(pictures[x]);
+};
+
+var addBigPictureListener = function (collection) {
   for (var i = 0; i < collection.length; i++) {
     collection[i].addEventListener('click', function (evt) {
-      var x = evt.currentTarget.getAttribute('data-index');
-      renderBigPicture(pictures[x]);
+      getIndexAndRender(evt);
     });
   }
 };
 
 var smallPictures = document.querySelectorAll('.picture__link');
 
-openBigPicture(smallPictures);
+addBigPictureListener(smallPictures);
 
-var closeIt = function (element) {
-  var close = element.querySelector('.cancel');
-  close.addEventListener('click', function () {
-    element.classList.add('hidden');
-  });
+var closePopup = function (element) {
+  element.classList.add('hidden');
 };
 
-closeIt(bigPicture);
+var findPopupCloseButton = function (element) {
+  return element.querySelector('.cancel');
+};
+
+findPopupCloseButton(bigPicture).addEventListener('click', function () {
+  closePopup(bigPicture);
+});
+
+// closePopup(bigPicture);
 
 // Загрузка изображения и показ формы редактирования + закрытие
 var uploadFile = document.querySelector('#upload-file');
 var imageEditor = document.querySelector('.img-upload__overlay');
+imageEditor.classList.remove('hidden');
 
 uploadFile.addEventListener('change', function () {
   imageEditor.classList.remove('hidden');
 });
 
-var closeImageEditor = imageEditor.querySelector('.cancel');
-
-closeImageEditor.addEventListener('click', function () {
-  closeIt(imageEditor);
+findPopupCloseButton(imageEditor).addEventListener('click', function () {
+  closePopup(imageEditor);
   imageEditor.removeAttribute('value');
   clearClassAndStyle(previewImg);
 });
@@ -235,37 +243,49 @@ var previewImgBlock = document.querySelector('.img-upload__preview');
 var previewImg = previewImgBlock.querySelector('img');
 
 var clearClassAndStyle = function (element) {
-  var classList = element.classList;
-  while (classList.length > 0) {
-    classList.remove(classList.item(0));
-  }
-  previewImg.removeAttribute('style');
+  // var classList = element.classList;
+  // while (classList.length > 0) {
+  //   classList.remove(classList.item(0));
+  // }
+  element.className = '';
+  element.setAttribute('style', '');
 };
 
-var effectList = document.querySelectorAll('.effects__preview');
+// var effectList = document.querySelectorAll('.effects__preview');
 
-var getEffectToData = function (element) {
-  var name;
-  if (element.classList.contains('effects__preview--none')) {
-    name = 'effects__preview--none';
-  } else if (element.classList.contains('effects__preview--chrome')) {
-    name = 'effects__preview--chrome';
-  } else if (element.classList.contains('effects__preview--sepia')) {
-    name = 'effects__preview--sepia';
-  } else if (element.classList.contains('effects__preview--marvin')) {
-    name = 'effects__preview--marvin';
-  } else if (element.classList.contains('effects__preview--phobos')) {
-    name = 'effects__preview--phobos';
-  } else if (element.classList.contains('effects__preview--heat')) {
-    name = 'effects__preview--heat';
+// var getEffectToData = function (element) {
+//   var name;
+//   if (element.classList.contains('effects__preview--none')) {
+//     name = 'effects__preview--none';
+//   } else if (element.classList.contains('effects__preview--chrome')) {
+//     name = 'effects__preview--chrome';
+//   } else if (element.classList.contains('effects__preview--sepia')) {
+//     name = 'effects__preview--sepia';
+//   } else if (element.classList.contains('effects__preview--marvin')) {
+//     name = 'effects__preview--marvin';
+//   } else if (element.classList.contains('effects__preview--phobos')) {
+//     name = 'effects__preview--phobos';
+//   } else if (element.classList.contains('effects__preview--heat')) {
+//     name = 'effects__preview--heat';
+//   }
+//   return name;
+// };
+//
+// var getEffectName = function (element) {
+//   var block = element.querySelector('span');
+//   // block.getAttribute('data-effect', getEffectToData(block, effectList));
+//   return block.dataset.effect;
+// }; Пока спрячу, но удалять не буду, а вдруг пригодиться??
+
+var getEffectClass = function (element) {
+  var span = element.querySelector('span');
+  var effectClass;
+  for (var i = 0; i < span.classList.length; i++) {
+    if (span.classList.item(i).startsWith('effects__preview--')) {
+      effectClass = span.classList.item(i);
+    }
   }
-  return name;
-};
-
-var getEffectName = function (element) {
-  var block = element.querySelector('span');
-  block.setAttribute('data-effect', getEffectToData(block, effectList));
-  return block.dataset.effect;
+  return effectClass;
 };
 
 var setEffectClass = function (value, img) {
@@ -276,7 +296,8 @@ var setEffectClass = function (value, img) {
 var applyEffect = function (collection) {
   for (var i = 0; i < collection.length; i++) {
     collection[i].addEventListener('click', function (evt) {
-      setEffectClass(getEffectName(evt.currentTarget), previewImg);
+      setEffectClass(getEffectClass(evt.currentTarget), previewImg);
+      setValueSize(defaultQty);
     });
   }
 };
@@ -286,7 +307,6 @@ applyEffect(effect);
 var sliderPin = document.querySelector('.scale__pin');
 var slider = document.querySelector('.scale__line');
 var scaleValue = document.querySelector('.scale__value');
-// var imgScale = document.querySelector('.img-upload__scale'); так и не смог спрятать слайдер. добавлял класс и внутри setNewStyle и в обработчике клика на эффекты - не срабатывает.
 
 var proportion = function (xOfSlider, xOfPin) {
   var percentage = Math.floor(100 / (slider.offsetWidth / (xOfPin.left - xOfSlider.left)));
@@ -349,7 +369,7 @@ sliderPin.addEventListener('mouseup', function () {
 var minusSize = document.querySelector('.resize__control--minus');
 var plusSize = document.querySelector('.resize__control--plus');
 var valueSize = document.querySelector('.resize__control--value');
-var qty = 100;
+var defaultQty = 100;
 var MAX_QTY = 100;
 var MIN_QTY = 25;
 var QTY_STEP = 25;
@@ -374,20 +394,21 @@ var setValueSize = function (size) {
   previewImg.setAttribute('style', makeResize(size));
 };
 
-setValueSize(qty);
+setValueSize(defaultQty);
 
 var setNewSize = function (step, increase) {
+  var qty = defaultQty;
   if (increase === 1) {
     qty = qty + step;
   } else {
     qty = qty - step;
   }
-  var size = 'transform: scale(' + (oversizeCheck(qty) / 100) + ');';
-  setValueSize(oversizeCheck(qty));
+  qty = oversizeCheck(qty);
+  var size = 'transform: scale(' + (qty / 100) + ');';
+  setValueSize(qty);
   return size;
 };
 
-// а вот тут глюк, если нажать 3 раза на плюс после значения размера 1, то потом надо нажать три раза на минус, прежде чем размер начнет уменьшаться. И наоборот.
 minusSize.addEventListener('click', function () {
   setNewSize(QTY_STEP, 0);
 });
