@@ -223,6 +223,8 @@ findPopupCloseButton(bigPicture).addEventListener('click', function () {
 // Загрузка изображения и показ формы редактирования + закрытие
 var uploadFile = document.querySelector('#upload-file');
 var imageEditor = document.querySelector('.img-upload__overlay');
+var effectValue = '';
+var sizeValue = '';
 
 uploadFile.addEventListener('change', function () {
   imageEditor.classList.remove('hidden');
@@ -298,7 +300,7 @@ var applyEffect = function (collection) {
       setValueSize(defaultQuantity);
       setEffectClass(getEffectClass(evt.currentTarget), previewImg);
       quantity = defaultQuantity;
-      previewImg.setAttribute('data-effect', '');
+      effectValue = '';
     });
   }
 };
@@ -348,7 +350,7 @@ var setNewStyle = function (block, xOfSlider, xOfPin) {
     effectName = 'brightness';
   }
   newStyle = 'filter: ' + effectName + '(' + quantity + ');';
-  block.setAttribute('data-effect', newStyle);
+  effectValue = newStyle;
   return newStyle;
 };
 
@@ -358,7 +360,7 @@ sliderPin.addEventListener('mouseup', function () {
   setValueScale(sliderX, pinX);
   previewImg.removeAttribute('style');
   previewImg.setAttribute('style', setNewStyle(previewImg, sliderX, pinX));
-  updatePreviewStyle();
+  updatePreviewStyle(effectValue, sizeValue);
 });
 
 //  а теперь изменяем размеры
@@ -382,12 +384,13 @@ var oversizeCheck = function (number) {
 var makeResize = function (number) {
   var newSize;
   newSize = 'transform: scale(' + (number / 100) + ');';
+  sizeValue = newSize;
   return newSize;
 };
 
 var setValueSize = function (size) {
   valueSize.setAttribute('value', size + '%');
-  previewImg.setAttribute('data-size', makeResize(size));
+  previewImg.setAttribute('style', makeResize(size));
 };
 
 setValueSize(defaultQuantity);
@@ -403,25 +406,24 @@ var setNewSize = function (step, increase) {
   quantity = oversizeCheck(quantity);
   setValueSize(quantity);
   var size = quantity / 100;
-  updatePreviewStyle();
   return size;
 };
 
 minusSize.addEventListener('click', function () {
   setNewSize(QUANITY_STEP, 0);
+  updatePreviewStyle(effectValue, sizeValue);
 });
 
 plusSize.addEventListener('click', function () {
   setNewSize(QUANITY_STEP, 1);
+  updatePreviewStyle(effectValue, sizeValue);
 });
 
-var updatePreviewStyle = function () {
-  var dataEffect = previewImg.getAttribute('data-effect');
-  var dataSize = previewImg.getAttribute('data-size');
-  if (dataEffect === null) {
-    dataEffect = '';
-  } else if (dataSize === null) {
-    dataSize = '';
+var updatePreviewStyle = function (effectDescription, sizeDescription) {
+  if (effectDescription === null || undefined) {
+    effectDescription = '';
+  } else if (sizeDescription === null || undefined) {
+    sizeDescription = '';
   }
-  previewImg.setAttribute('style', dataEffect + dataSize);
+  previewImg.setAttribute('style', effectDescription + sizeDescription);
 };
