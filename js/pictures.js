@@ -298,6 +298,7 @@ var applyEffect = function (collection) {
       setValueSize(defaultQuantity);
       setEffectClass(getEffectClass(evt.currentTarget), previewImg);
       quantity = defaultQuantity;
+      previewImg.setAttribute('data-effect', '');
     });
   }
 };
@@ -347,6 +348,7 @@ var setNewStyle = function (block, xOfSlider, xOfPin) {
     effectName = 'brightness';
   }
   newStyle = 'filter: ' + effectName + '(' + quantity + ');';
+  block.setAttribute('data-effect', newStyle);
   return newStyle;
 };
 
@@ -355,7 +357,6 @@ sliderPin.addEventListener('mouseup', function () {
   var pinX = sliderPin.getBoundingClientRect();
   setValueScale(sliderX, pinX);
   previewImg.removeAttribute('style');
-  previewImg.setAttribute('data-effect', setNewStyle(previewImg, sliderX, pinX));
   previewImg.setAttribute('style', setNewStyle(previewImg, sliderX, pinX));
   updatePreviewStyle();
 });
