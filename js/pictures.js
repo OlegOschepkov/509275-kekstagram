@@ -437,14 +437,15 @@ var checkHashTags = function (element) {
   var message;
   var array = element.value.split(' ');
   var regExp = /#\S{1,18}/i;
+  var errorMessages = [
+    '1. хэш-тег начинается с символа # (решётка)',
+    '2. хеш-тег не может состоять только из одной решётки',
+    '3. хэш-теги разделяются пробелами',
+    '4. максимальная длина одного хэш-тега 20 символов, включая решётку'
+  ];
   for (var i = 0; i < array.length; i++) {
     if (array[i].search(regExp)) {
-      message = element.setCustomValidity([
-        'хэш-тег начинается с символа # (решётка)',
-        'хеш-тег не может состоять только из одной решётки',
-        'хэш-теги разделяются пробелами',
-        'максимальная длина одного хэш-тега 20 символов, включая решётку'
-      ]);
+      message = element.setCustomValidity(errorMessages.join('\n'));
     } else {
       message = true;
     }
