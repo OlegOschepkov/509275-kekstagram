@@ -408,7 +408,7 @@ var hashTagField = document.querySelector('.text__hashtags');
 
 var checkHashTagQuantity = function (element) {
   var message;
-  var array = element.value.split(' ');
+  var array = element.value.trim().split(' ');
   if (array.length > 5) {
     message = element.setCustomValidity('Максимальное количество хешгетов - 5. Удалите один или несколько хешгетов');
   } else {
@@ -421,7 +421,7 @@ var checkDuplicates = function (element) {
   var array = element.value.split(' ');
   var message;
   array.sort();
-  for (var i = 0; i < array.length; i++) {
+  for (var i = 0; i < array.length - 1; i++) {
     if (String(array[i]).toUpperCase() === String(array[i + 1]).toUpperCase()) {
       message = element.setCustomValidity('один и тот же хэш-тег не может быть использован дважды');
       return message;
@@ -436,7 +436,7 @@ var checkDuplicates = function (element) {
 var checkHashTags = function (element) {
   var message;
   var array = element.value.split(' ');
-  var regExp = /#\S{1,18}/i;
+  var regExp = /#[^#\s]{1,18}/i;
   var errorMessages = [
     '1. хэш-тег начинается с символа # (решётка)',
     '2. хеш-тег не может состоять только из одной решётки',
@@ -454,12 +454,12 @@ var checkHashTags = function (element) {
 };
 
 var checkHashTagValidity = function (element) {
-  if (checkHashTagQuantity(element) & checkDuplicates(element) & checkHashTags(element)) {
+  if (checkHashTagQuantity(element) && checkDuplicates(element) && checkHashTags(element)) {
     element.setCustomValidity('');
   }
 };
 
-hashTagField.addEventListener('invalid', function () {
+hashTagField.addEventListener('change', function () {
   checkHashTagValidity(hashTagField);
 });
 
