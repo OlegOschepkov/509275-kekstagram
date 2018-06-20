@@ -47,7 +47,7 @@
                     <button type="button" class="resize__control resize__control--plus">Увеличить</button>
                   </fieldset>
 
-                  <div class="img-upload__preview">
+                  <div class="img-upload__preview" style="background: grey">
                     <img src="img/upload-default-image.jpg" alt="Предварительный просмотр фотографии">
                   </div>
 
@@ -110,8 +110,8 @@
                 </fieldset>
 
                 <fieldset class="img-upload__text text">
-                  <input class="text__hashtags" name="hashtags" placeholder="#хэш-тег">
-                  <textarea class="text__description" name="description" placeholder="Ваш комментарий..."></textarea>
+                  <input class="text__hashtags" name="hashtags" placeholder="#хэш-тег" maxlength="20" minlength ="2" required>
+                  <textarea class="text__description" name="description" placeholder="Ваш комментарий..." maxlength="140" minlength ="1"></textarea>
                 </fieldset>
 
                 <button type="submit" class="img-upload__submit" id="upload-submit">Опубликовать</button>
@@ -150,7 +150,7 @@
           <button class="social__loadmore" type="button">Загрузить еще</button>
           <div class="social__footer">
             <img class="social__picture" src="img/avatar-6.svg" alt="Аватар комментатора фотографии" width="35" height="35">
-            <input type="text" class="social__footer-text" placeholder="Ваш комментарий...">
+            <input type="text" class="social__footer-text" placeholder="Ваш комментарий..." maxlength="140" minlength ="1">
             <button type="button" class="social__footer-btn" name="button">Отправить</button>
           </div>
         </div>
