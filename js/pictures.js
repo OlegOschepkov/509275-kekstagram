@@ -1,7 +1,6 @@
 'use strict';
 
 var bigPicture = document.querySelector('.big-picture');
-// bigPicture.classList.remove('hidden');
 var comentCount = document.querySelector('.social__comment-count');
 var addComment = document.querySelector('.social__loadmore');
 var bigPictureBlocks = bigPicture.querySelector('.social__comments');
@@ -251,32 +250,6 @@ var clearClassAndStyle = function (element) {
   element.className = '';
   element.setAttribute('style', '');
 };
-
-// var effectList = document.querySelectorAll('.effects__preview');
-
-// var getEffectToData = function (element) {
-//   var name;
-//   if (element.classList.contains('effects__preview--none')) {
-//     name = 'effects__preview--none';
-//   } else if (element.classList.contains('effects__preview--chrome')) {
-//     name = 'effects__preview--chrome';
-//   } else if (element.classList.contains('effects__preview--sepia')) {
-//     name = 'effects__preview--sepia';
-//   } else if (element.classList.contains('effects__preview--marvin')) {
-//     name = 'effects__preview--marvin';
-//   } else if (element.classList.contains('effects__preview--phobos')) {
-//     name = 'effects__preview--phobos';
-//   } else if (element.classList.contains('effects__preview--heat')) {
-//     name = 'effects__preview--heat';
-//   }
-//   return name;
-// };
-//
-// var getEffectName = function (element) {
-//   var block = element.querySelector('span');
-//   // block.getAttribute('data-effect', getEffectToData(block, effectList));
-//   return block.dataset.effect;
-// }; Пока спрячу, но удалять не буду, а вдруг пригодиться??
 
 var getEffectClass = function (element) {
   var span = element.querySelector('span');
