@@ -405,63 +405,45 @@ var updatePreviewStyle = function (effectDescription, sizeDescription) {
 var hashTagField = document.querySelector('.text__hashtags');
 // var descriptionField = document.querySelector('.text__description');
 // var commentaryField = document.querySelector('.social__footer-text');
+// #1 #2 #3 #4 @
 
-var checkHashTagQuantity = function (element) {
-  var message;
-  var array = element.value.trim().split(' ');
+var checkHashTagQuantity = function (element, array) {
+  var message = '';
   if (array.length > 5) {
-    message = element.setCustomValidity('Максимальное количество хешгетов - 5. Удалите один или несколько хешгетов');
-  } else {
-    message = true;
+    message = 'Максимальное количество хешгетов - 5. Удалите один или несколько хешгетов';
   }
   return message;
 };
 
-var checkDuplicates = function (element) {
-  var array = element.value.split(' ');
-  var message;
+var checkDuplicates = function (element, array) {
+  var message = '';
   array.sort();
   for (var i = 0; i < array.length - 1; i++) {
     if (String(array[i]).toUpperCase() === String(array[i + 1]).toUpperCase()) {
-      message = element.setCustomValidity('один и тот же хэш-тег не может быть использован дважды');
-      return message;
-    } else {
-      message = true;
+      message = 'один и тот же хэш-тег не может быть использован дважды';
     }
   }
   return message;
 };
 
-//  Вадим, вот тут некрасиво сообщения выводяться, как поправить?
-var checkHashTags = function (element) {
-  var message;
-  var array = element.value.split(' ');
-  var regExp = /#[^#\s]{1,18}/i;
-  var errorMessages = [
-    '1. хэш-тег начинается с символа # (решётка)',
-    '2. хеш-тег не может состоять только из одной решётки',
-    '3. хэш-теги разделяются пробелами',
-    '4. максимальная длина одного хэш-тега 20 символов, включая решётку'
-  ];
+var checkHashTags = function (element, array) {
+  var message = '';
+  var regExp = /^#[^\s]\S{1,18}$/i;
   for (var i = 0; i < array.length; i++) {
-    if (array[i].search(regExp)) {
-      message = element.setCustomValidity(errorMessages.join('\n'));
-    } else {
-      message = true;
+    if (regExp.test(array[i].toString()) === false) {
+      message =
+        'Пожалуйста проверьте, что хэш-тег начинается с символа # (решётка), хэш-теги разделяются пробелами, длина хештега не превышает 20 символов, также хеш-тег не может состоять только из одной решётки'
+      ;
     }
   }
   return message;
 };
 
 var checkHashTagValidity = function (element) {
-  if (checkHashTagQuantity(element) && checkDuplicates(element) && checkHashTags(element)) {
-    element.setCustomValidity('');
-  }
+  var arrayOfTags = element.value.trim().split(/\s+/);
+  var errorMessage = checkHashTagQuantity(element, arrayOfTags) || checkDuplicates(element, arrayOfTags) || checkHashTags(element, arrayOfTags);
+  element.setCustomValidity(errorMessage);
 };
-
-hashTagField.addEventListener('change', function () {
-  checkHashTagValidity(hashTagField);
-});
 
 hashTagField.addEventListener('input', function () {
   checkHashTagValidity(hashTagField);
