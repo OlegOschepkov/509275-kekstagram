@@ -428,12 +428,14 @@ var checkDuplicates = function (element, array) {
 
 var checkHashTags = function (element, array) {
   var message = '';
-  var regExp = /^#[^\s]\S{1,18}$/i;
+  var regExp = /^#[^\s]{1,19}$/i;
   for (var i = 0; i < array.length; i++) {
     if (regExp.test(array[i].toString()) === false) {
+      console.log(array[i].toString());
       message =
         'Пожалуйста проверьте, что хэш-тег начинается с символа # (решётка), хэш-теги разделяются пробелами, длина хештега не превышает 20 символов, также хеш-тег не может состоять только из одной решётки'
       ;
+      break;
     }
   }
   return message;
