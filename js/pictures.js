@@ -1,7 +1,6 @@
 'use strict';
 
 var bigPicture = document.querySelector('.big-picture');
-// bigPicture.classList.remove('hidden');
 var comentCount = document.querySelector('.social__comment-count');
 var addComment = document.querySelector('.social__loadmore');
 var bigPictureBlocks = bigPicture.querySelector('.social__comments');
@@ -252,32 +251,6 @@ var clearClassAndStyle = function (element) {
   element.setAttribute('style', '');
 };
 
-// var effectList = document.querySelectorAll('.effects__preview');
-
-// var getEffectToData = function (element) {
-//   var name;
-//   if (element.classList.contains('effects__preview--none')) {
-//     name = 'effects__preview--none';
-//   } else if (element.classList.contains('effects__preview--chrome')) {
-//     name = 'effects__preview--chrome';
-//   } else if (element.classList.contains('effects__preview--sepia')) {
-//     name = 'effects__preview--sepia';
-//   } else if (element.classList.contains('effects__preview--marvin')) {
-//     name = 'effects__preview--marvin';
-//   } else if (element.classList.contains('effects__preview--phobos')) {
-//     name = 'effects__preview--phobos';
-//   } else if (element.classList.contains('effects__preview--heat')) {
-//     name = 'effects__preview--heat';
-//   }
-//   return name;
-// };
-//
-// var getEffectName = function (element) {
-//   var block = element.querySelector('span');
-//   // block.getAttribute('data-effect', getEffectToData(block, effectList));
-//   return block.dataset.effect;
-// }; Пока спрячу, но удалять не буду, а вдруг пригодиться??
-
 var getEffectClass = function (element) {
   var span = element.querySelector('span');
   var effectClass;
@@ -427,3 +400,52 @@ var updatePreviewStyle = function (effectDescription, sizeDescription) {
   }
   previewImg.setAttribute('style', effectDescription + sizeDescription);
 };
+
+// проверка хештегов на валидность.
+var hashTagField = document.querySelector('.text__hashtags');
+// var descriptionField = document.querySelector('.text__description');
+// var commentaryField = document.querySelector('.social__footer-text');
+// #1 #2 #3 #4 @
+
+var checkHashTagQuantity = function (element, array) {
+  var message = '';
+  if (array.length > 5) {
+    message = 'Максимальное количество хешгетов - 5. Удалите один или несколько хешгетов';
+  }
+  return message;
+};
+
+var checkDuplicates = function (element, array) {
+  var message = '';
+  array.sort();
+  for (var i = 0; i < array.length - 1; i++) {
+    if (String(array[i]).toUpperCase() === String(array[i + 1]).toUpperCase()) {
+      message = 'один и тот же хэш-тег не может быть использован дважды';
+    }
+  }
+  return message;
+};
+
+var checkHashTags = function (element, array) {
+  var message = '';
+  var regExp = /^#[^\s]{1,19}$/i;
+  for (var i = 0; i < array.length; i++) {
+    if (regExp.test(array[i].toString()) === false) {
+      message =
+        'Пожалуйста проверьте, что хэш-тег начинается с символа # (решётка), хэш-теги разделяются пробелами, длина хештега не превышает 20 символов, также хеш-тег не может состоять только из одной решётки'
+      ;
+      break;
+    }
+  }
+  return message;
+};
+
+var checkHashTagValidity = function (element) {
+  var arrayOfTags = element.value.trim().split(/\s+/);
+  var errorMessage = checkHashTagQuantity(element, arrayOfTags) || checkDuplicates(element, arrayOfTags) || checkHashTags(element, arrayOfTags);
+  element.setCustomValidity(errorMessage);
+};
+
+hashTagField.addEventListener('input', function () {
+  checkHashTagValidity(hashTagField);
+});
