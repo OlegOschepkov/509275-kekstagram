@@ -224,6 +224,7 @@ var uploadFile = document.querySelector('#upload-file');
 var imageEditor = document.querySelector('.img-upload__overlay');
 var effectValue = '';
 var sizeValue = '';
+imageEditor.classList.remove('hidden');
 
 uploadFile.addEventListener('change', function () {
   imageEditor.classList.remove('hidden');
@@ -283,9 +284,13 @@ applyEffect(effect);
 var sliderPin = document.querySelector('.scale__pin');
 var slider = document.querySelector('.scale__line');
 var scaleValue = document.querySelector('.scale__value');
+var scaleLevel = document.querySelector('.scale__level');
 
 var proportion = function (xOfSlider, xOfPin) {
   var percentage = Math.floor(100 / (slider.offsetWidth / (xOfPin.left - xOfSlider.left)));
+  if (percentage < 0) {
+    percentage = 0;
+  }
   return percentage;
 };
 
@@ -303,6 +308,11 @@ var setNewStyle = function (block, xOfSlider, xOfPin) {
   var effectName;
   var newStyle;
   var temp = (1 / 100) * proportion(xOfSlider, xOfPin);
+  if (temp <= 0) {
+    temp = 0;
+  } else if (temp >= 100) {
+    temp = 100;
+  }
   if (block.classList.contains('effects__preview--none')) {
     quantity = 0;
     effectName = 'none';
@@ -320,21 +330,74 @@ var setNewStyle = function (block, xOfSlider, xOfPin) {
     effectName = 'blur';
   } else if (block.classList.contains('effects__preview--heat')) {
     quantity = chooseOneOfThree(temp);
+    if (quantity === 0) {
+      // убираю ноль, а то картинка черной становиться
+      quantity = 1;
+    }
     effectName = 'brightness';
+  } else if (quantity < 0) {
+    quantity = 0;
   }
   newStyle = 'filter: ' + effectName + '(' + quantity + ');';
   effectValue = newStyle;
   return newStyle;
 };
 
-sliderPin.addEventListener('mouseup', function () {
-  var sliderX = slider.getBoundingClientRect();
-  var pinX = sliderPin.getBoundingClientRect();
-  setValueScale(sliderX, pinX);
+
+var sliderX = slider.getBoundingClientRect();
+var pinX = {
+  x: 0
+};
+
+var translatePinToEffect = function () {
+  pinX.x = sliderPin.getBoundingClientRect();
+  setValueScale(sliderX, pinX.x);
   previewImg.removeAttribute('style');
-  previewImg.setAttribute('style', setNewStyle(previewImg, sliderX, pinX));
+  previewImg.setAttribute('style', setNewStyle(previewImg, sliderX, pinX.x));
   updatePreviewStyle(effectValue, sizeValue);
+};
+
+sliderPin.addEventListener('mousedown', function (evt) {
+  translatePinToEffect();
+
+  var startCoords = {
+    x: evt.clientX
+  };
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+    };
+
+    startCoords = {
+      x: moveEvt.clientX
+    };
+
+    sliderPin.style.left = (sliderPin.offsetLeft - shift.x) + 'px';
+
+    if (startCoords.x < sliderX.left) {
+      sliderPin.style.left = 0;
+    } else if (startCoords.x > sliderX.right) {
+      sliderPin.style.left = sliderX.width + 'px';
+    }
+    scaleLevel.style.width = sliderPin.style.left;
+    translatePinToEffect();
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+    translatePinToEffect();
+    onMouseMove(upEvt);
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
 });
+
 
 //  а теперь изменяем размеры
 var minusSize = document.querySelector('.resize__control--minus');
