@@ -242,12 +242,12 @@ findPopupCloseButton(imageEditor).addEventListener('click', function () {
 var effect = document.querySelectorAll('.effects__item');
 var previewImgBlock = document.querySelector('.img-upload__preview');
 var previewImg = previewImgBlock.querySelector('img');
+var sliderBlock = document.querySelector('.img-upload__scale');
+// sliderBlock.classList.add('hidden');
+
+console.log(sliderBlock.classList);
 
 var clearClassAndStyle = function (element) {
-  // var classList = element.classList;
-  // while (classList.length > 0) {
-  //   classList.remove(classList.item(0));
-  // }
   element.className = '';
   element.setAttribute('style', '');
 };
@@ -266,6 +266,7 @@ var getEffectClass = function (element) {
 var setEffectClass = function (value, img) {
   clearClassAndStyle(img);
   img.classList.add(value);
+  img.setAttribute('style', setNewStyle(previewImg, sliderX, sliderPin.getBoundingClientRect().left));
 };
 
 var applyEffect = function (collection) {
@@ -275,7 +276,11 @@ var applyEffect = function (collection) {
       setEffectClass(getEffectClass(evt.currentTarget), previewImg);
       quantity = defaultQuantity;
       effectValue = '';
-
+      // if (previewImg.classList.contains('effects__preview--none')) {
+      //   sliderBlock.classList.add('hidden');
+      // } else if (sliderBlock.classList.contains('hidden') && !previewImg.classList.contains('effects__preview--none')) {
+      //   sliderBlock.classList.remove('hidden');
+      // }
     });
   }
 };
@@ -288,7 +293,7 @@ var scaleValue = document.querySelector('.scale__value');
 var scaleLevel = document.querySelector('.scale__level');
 
 var proportion = function (xOfSlider, xOfPin) {
-  var percentage = Math.floor(100 / (slider.offsetWidth / (xOfPin.left - xOfSlider.left)));
+  var percentage = Math.floor(100 / (slider.offsetWidth / (xOfPin - xOfSlider.left)));
   if (percentage < 0) {
     percentage = 0;
   }
@@ -347,13 +352,10 @@ var setNewStyle = function (block, xOfSlider, xOfPin) {
 var sliderX = slider.getBoundingClientRect();
 
 var translatePinToEffect = function () {
-  var pinX = {
-    x: sliderPin.getBoundingClientRect()
-  };
-  setValueScale(sliderX, pinX.x);
+  var pinX = sliderPin.getBoundingClientRect();
+  setValueScale(sliderX, pinX.left);
   previewImg.removeAttribute('style');
-  previewImg.setAttribute('style', setNewStyle(previewImg, sliderX, pinX));
-  previewImg.setAttribute('style', setNewStyle(previewImg, sliderX, pinX.x));
+  previewImg.setAttribute('style', setNewStyle(previewImg, sliderX, pinX.left));
   updatePreviewStyle(effectValue, sizeValue);
 };
 
