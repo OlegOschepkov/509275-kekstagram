@@ -224,7 +224,7 @@ var uploadFile = document.querySelector('#upload-file');
 var imageEditor = document.querySelector('.img-upload__overlay');
 var effectValue = '';
 var sizeValue = '';
-imageEditor.classList.remove('hidden');
+// imageEditor.classList.remove('hidden');
 
 uploadFile.addEventListener('change', function () {
   imageEditor.classList.remove('hidden');
