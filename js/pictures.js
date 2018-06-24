@@ -224,7 +224,7 @@ var uploadFile = document.querySelector('#upload-file');
 var imageEditor = document.querySelector('.img-upload__overlay');
 var effectValue = '';
 var sizeValue = '';
-// imageEditor.classList.remove('hidden');
+imageEditor.classList.remove('hidden');
 
 uploadFile.addEventListener('change', function () {
   imageEditor.classList.remove('hidden');
@@ -275,6 +275,7 @@ var applyEffect = function (collection) {
       setEffectClass(getEffectClass(evt.currentTarget), previewImg);
       quantity = defaultQuantity;
       effectValue = '';
+
     });
   }
 };
@@ -343,16 +344,15 @@ var setNewStyle = function (block, xOfSlider, xOfPin) {
   return newStyle;
 };
 
-
 var sliderX = slider.getBoundingClientRect();
-var pinX = {
-  x: 0
-};
 
 var translatePinToEffect = function () {
-  pinX.x = sliderPin.getBoundingClientRect();
+  var pinX = {
+    x: sliderPin.getBoundingClientRect()
+  };
   setValueScale(sliderX, pinX.x);
   previewImg.removeAttribute('style');
+  previewImg.setAttribute('style', setNewStyle(previewImg, sliderX, pinX));
   previewImg.setAttribute('style', setNewStyle(previewImg, sliderX, pinX.x));
   updatePreviewStyle(effectValue, sizeValue);
 };
@@ -366,7 +366,6 @@ sliderPin.addEventListener('mousedown', function (evt) {
 
   var onMouseMove = function (moveEvt) {
     moveEvt.preventDefault();
-
     var shift = {
       x: startCoords.x - moveEvt.clientX,
     };
@@ -387,7 +386,6 @@ sliderPin.addEventListener('mousedown', function (evt) {
   };
 
   var onMouseUp = function (upEvt) {
-    upEvt.preventDefault();
     translatePinToEffect();
     onMouseMove(upEvt);
     document.removeEventListener('mousemove', onMouseMove);
@@ -466,9 +464,6 @@ var updatePreviewStyle = function (effectDescription, sizeDescription) {
 
 // проверка хештегов на валидность.
 var hashTagField = document.querySelector('.text__hashtags');
-// var descriptionField = document.querySelector('.text__description');
-// var commentaryField = document.querySelector('.social__footer-text');
-// #1 #2 #3 #4 @
 
 var checkHashTagQuantity = function (element, array) {
   var message = '';
