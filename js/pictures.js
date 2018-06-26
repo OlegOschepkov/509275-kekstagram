@@ -228,6 +228,7 @@ var sizeValue = '';
 
 uploadFile.addEventListener('change', function () {
   imageEditor.classList.remove('hidden');
+  sliderBlock.classList.add('hidden');
 });
 
 findPopupCloseButton(imageEditor).addEventListener('click', function () {
@@ -243,7 +244,7 @@ var effect = document.querySelectorAll('.effects__item');
 var previewImgBlock = document.querySelector('.img-upload__preview');
 var previewImg = previewImgBlock.querySelector('img');
 var sliderBlock = document.querySelector('.img-upload__scale');
-sliderBlock.classList.add('hidden');
+// sliderBlock.classList.add('hidden');
 
 var clearClassAndStyle = function (element) {
   element.className = '';
@@ -302,8 +303,8 @@ var setValueScale = function (xOfSlider, xOfPin) {
   scaleValue.setAttribute('value', proportion(xOfSlider, xOfPin));
 };
 
-var chooseOneOfThree = function (number) {
-  var choosen = Math.ceil(number * 3);
+var chooseOneOfThree = function (to, from) {
+  var choosen = Math.floor(Math.random() * (to - from + 1) + from);
   return choosen;
 };
 
@@ -330,14 +331,10 @@ var setNewStyle = function (block, xOfSlider, xOfPin) {
     quantity = 100 * temp + '%';
     effectName = 'invert';
   } else if (block.classList.contains('effects__preview--phobos')) {
-    quantity = chooseOneOfThree(temp) + 'px';
+    quantity = chooseOneOfThree(temp, 0) + 'px';
     effectName = 'blur';
   } else if (block.classList.contains('effects__preview--heat')) {
-    quantity = chooseOneOfThree(temp);
-    if (quantity === 0) {
-      // убираю ноль, а то картинка черной становиться
-      quantity = 1;
-    }
+    quantity = chooseOneOfThree(temp, 1);
     effectName = 'brightness';
   } else if (quantity < 0) {
     quantity = 0;
