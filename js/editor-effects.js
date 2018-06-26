@@ -5,6 +5,9 @@ window.editorEffects = (function () {
   var sliderBlock = document.querySelector('.img-upload__scale');
   sliderBlock.classList.add('hidden');
   var scaleValue = document.querySelector('.scale__value');
+  var utility = window.utility;
+  var editorResize = window.editorResize;
+
 
   var clearClassAndStyle = function (element) {
     element.className = '';
@@ -27,20 +30,20 @@ window.editorEffects = (function () {
   var setEffectClass = function (value, img) {
     clearClassAndStyle(img);
     img.classList.add(value);
-    img.setAttribute('style', window.editorEffects.setNewStyle(window.editorResize.previewImg));
-    window.utility.effectValue = window.editorEffects.setNewStyle(window.editorResize.previewImg);
+    img.setAttribute('style', window.editorEffects.setNewStyle(editorResize.previewImg));
+    utility.effectValue = window.editorEffects.setNewStyle(editorResize.previewImg);
   };
 
   var applyEffect = function (collection) {
     for (var i = 0; i < collection.length; i++) {
       collection[i].addEventListener('click', function (evt) {
-        window.editorResize.setValueSize(window.utility.defaultQuantity);
-        setEffectClass(getEffectClass(evt.currentTarget), window.editorResize.previewImg);
-        window.editorResize.quantity = window.utility.defaultQuantity;
-        // window.utility.effectValue = '';
-        if (window.editorResize.previewImg.classList.contains('effects__preview--none')) {
+        editorResize.setValueSize(utility.defaultQuantity);
+        setEffectClass(getEffectClass(evt.currentTarget), editorResize.previewImg);
+        editorResize.quantity = utility.defaultQuantity;
+        // utility.effectValue = '';
+        if (editorResize.previewImg.classList.contains('effects__preview--none')) {
           sliderBlock.classList.add('hidden');
-        } else if (sliderBlock.classList.contains('hidden') && !window.editorResize.previewImg.classList.contains('effects__preview--none')) {
+        } else if (sliderBlock.classList.contains('hidden') && !editorResize.previewImg.classList.contains('effects__preview--none')) {
           sliderBlock.classList.remove('hidden');
         }
       });
@@ -53,7 +56,7 @@ window.editorEffects = (function () {
     var quantity;
     var effectName;
     var newStyle;
-    var temp = ((1 / 100) * window.utility.proportion()).toFixed(2); // округляю чтоб избежать бага с добавлением одной миллиардной
+    var temp = ((1 / 100) * utility.proportion()).toFixed(2); // округляю чтоб избежать бага с добавлением одной миллиардной
     if (temp <= 0) {
       temp = 0;
     } else if (temp >= 1) {
@@ -81,7 +84,7 @@ window.editorEffects = (function () {
       quantity = 0;
     }
     newStyle = 'filter: ' + effectName + '(' + quantity + ');';
-    window.utility.effectValue = newStyle;
+    utility.effectValue = newStyle;
     return newStyle;
   };
   // var chooseCustom = function (to, from) {

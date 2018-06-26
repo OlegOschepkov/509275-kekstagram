@@ -3,6 +3,7 @@
 window.data = (function () {
   var commentCount = document.querySelector('.social__comment-count'); // MM
   var addComment = document.querySelector('.social__loadmore');
+  var utility = window.utility;
 
   var commentStrings = [
     'Всё отлично!',
@@ -66,12 +67,12 @@ window.data = (function () {
   // создаю массив комментов для каждой фотки.
   var generateComments = function (commentsArr, min, max) {
     var messageArray = [];
-    for (var j = 0; j <= window.utility.getRandomInt(min, max); j++) {
+    for (var j = 0; j <= utility.getRandomInt(min, max); j++) {
       var singleComment;
       if (Math.random() > 0.5) {
-        singleComment = window.utility.getRandomElement(commentsArr) + ' ' + window.utility.getRandomElement(commentsArr);
+        singleComment = utility.getRandomElement(commentsArr) + ' ' + utility.getRandomElement(commentsArr);
       } else {
-        singleComment = window.utility.getRandomElement(commentsArr);
+        singleComment = utility.getRandomElement(commentsArr);
       }
       messageArray.push(singleComment);
     }
@@ -79,7 +80,7 @@ window.data = (function () {
   };
 
   var generateDescription = function (descriptionArr) {
-    return window.utility.getRandomElement(descriptionArr);
+    return utility.getRandomElement(descriptionArr);
   };
 
   // создаю массив картинок и присваиваю свойства
@@ -89,7 +90,7 @@ window.data = (function () {
       var commentsArray = generateComments(commentStrings, MIN_COMMENTS, MAX_COMMENTS);
       var picture = {
         url: 'photos/' + (sourceLinks[i] + 1) + '.jpg',
-        likes: window.utility.getRandomInt(MIN_LIKES, MAX_LIKES),
+        likes: utility.getRandomInt(MIN_LIKES, MAX_LIKES),
         comments: countComments(commentsArray),
         commentsText: commentsArray,
         description: generateDescription(descriptionArr)

@@ -1,20 +1,23 @@
 'use strict';
+
 window.slider = (function () {
+  var utility = window.utility;
+  var editorResize = window.editorResize;
 
   var setValueScale = function (xOfSlider, xOfPin) {
-    window.editorEffects.scaleValue.setAttribute('value', window.utility.proportion(xOfSlider, xOfPin));
+    window.editorEffects.scaleValue.setAttribute('value', utility.proportion(xOfSlider, xOfPin));
   };
 
   var pinX;
   var scaleLineX;
 
   var getPinCoords = function () {
-    pinX = window.utility.sliderPin.offsetLeft;
+    pinX = utility.sliderPin.offsetLeft;
     return pinX;
   };
 
   var getSliderCoords = function () {
-    scaleLineX = window.utility.scaleLine.offsetLeft;
+    scaleLineX = utility.scaleLine.offsetLeft;
     return scaleLineX;
   };
 
@@ -27,12 +30,12 @@ window.slider = (function () {
   var renewStyle = function () {
     pinX = getPinCoords();
     scaleLineX = getSliderCoords();
-    window.editorResize.previewImg.removeAttribute('style');
-    window.editorResize.previewImg.setAttribute('style', window.editorEffects.setNewStyle(window.editorResize.previewImg, scaleLineX, pinX));
-    window.editorResize.updatePreviewStyle(window.utility.effectValue, window.utility.sizeValue);
+    editorResize.previewImg.removeAttribute('style');
+    editorResize.previewImg.setAttribute('style', window.editorEffects.setNewStyle(editorResize.previewImg, scaleLineX, pinX));
+    editorResize.updatePreviewStyle(utility.effectValue, utility.sizeValue);
   };
 
-  window.utility.sliderPin.addEventListener('mousedown', function (evt) {
+  utility.sliderPin.addEventListener('mousedown', function (evt) {
     translatePinToEffect();
     renewStyle();
     var startCoords = {
@@ -51,15 +54,15 @@ window.slider = (function () {
 
       if (pinX < 0) {
         // console.log(startCoords.x);
-        // console.log(window.utility.scaleLineX.left);
-        window.utility.sliderPin.style.left = 0 + 'px';
-        startCoords.x = window.utility.scaleLine.left;
-      } else if (pinX > window.utility.scaleLine.offsetWidth) {
-        window.utility.sliderPin.style.left = window.utility.scaleLine.offsetWidth + 'px';
+        // console.log(utility.scaleLineX.left);
+        utility.sliderPin.style.left = 0 + 'px';
+        startCoords.x = utility.scaleLine.left;
+      } else if (pinX > utility.scaleLine.offsetWidth) {
+        utility.sliderPin.style.left = utility.scaleLine.offsetWidth + 'px';
       } else {
-        window.utility.sliderPin.style.left = (window.utility.sliderPin.offsetLeft - shift.x) + 'px';
+        utility.sliderPin.style.left = (utility.sliderPin.offsetLeft - shift.x) + 'px';
       }
-      window.utility.scaleLevel.style.width = window.utility.sliderPin.style.left;
+      utility.scaleLevel.style.width = utility.sliderPin.style.left;
       translatePinToEffect();
       renewStyle();
 
