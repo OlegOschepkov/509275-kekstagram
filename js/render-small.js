@@ -1,4 +1,5 @@
 'use strict';
+
 (function () {
   var similarListElement = document.querySelector('.pictures');
   var similarListTemplate = document.querySelector('#picture')

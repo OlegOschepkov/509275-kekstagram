@@ -5,7 +5,6 @@ window.editorResize = (function () {
   var imageEditor = document.querySelector('.img-upload__overlay');
   // imageEditor.classList.remove('hidden');
 
-
   var minusSize = document.querySelector('.resize__control--minus');
   var plusSize = document.querySelector('.resize__control--plus');
   var previewImg = window.utility.previewImgBlock.querySelector('img');

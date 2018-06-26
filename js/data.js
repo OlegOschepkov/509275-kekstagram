@@ -1,7 +1,7 @@
 'use strict';
 
 window.data = (function () {
-  var comentCount = document.querySelector('.social__comment-count'); // MM
+  var commentCount = document.querySelector('.social__comment-count'); // MM
   var addComment = document.querySelector('.social__loadmore');
 
   var commentStrings = [
@@ -37,7 +37,7 @@ window.data = (function () {
     block.classList.add('visually-hidden');
   };
 
-  hideBlock(comentCount);
+  hideBlock(commentCount);
   hideBlock(addComment);
 
   // создаю и перемешиваю массив номеров фоток
@@ -99,14 +99,6 @@ window.data = (function () {
     return picturesArr;
   };
 
-  var hideUnnecesary = function (blockClass) {
-    var htmlBlock = document.querySelector(blockClass);
-    htmlBlock.classList.add('.visually-hidden');
-  };
-
-  // спрячу .social__comment-count и .social__loadmore
-  hideUnnecesary('.social__comment-count');
-  hideUnnecesary('.social__loadmore');
   var pictures = generatePictures(commentStrings, descriptions);
 
   return {
