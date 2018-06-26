@@ -6,7 +6,7 @@ window.editorEffects = (function () {
   sliderBlock.classList.add('hidden');
   var scaleValue = document.querySelector('.scale__value');
   var utility = window.utility;
-  var editorResize = window.editorResize;
+  var resize = window.editorResize;
 
 
   var clearClassAndStyle = function (element) {
@@ -30,20 +30,20 @@ window.editorEffects = (function () {
   var setEffectClass = function (value, img) {
     clearClassAndStyle(img);
     img.classList.add(value);
-    img.setAttribute('style', window.editorEffects.setNewStyle(editorResize.previewImg));
-    utility.effectValue = window.editorEffects.setNewStyle(editorResize.previewImg);
+    img.setAttribute('style', window.editorEffects.setNewStyle(resize.previewImg));
+    utility.effectValue = window.editorEffects.setNewStyle(resize.previewImg);
   };
 
   var applyEffect = function (collection) {
     for (var i = 0; i < collection.length; i++) {
       collection[i].addEventListener('click', function (evt) {
-        editorResize.setValueSize(utility.defaultQuantity);
-        setEffectClass(getEffectClass(evt.currentTarget), editorResize.previewImg);
-        editorResize.quantity = utility.defaultQuantity;
+        resize.setValueSize(utility.defaultQuantity);
+        setEffectClass(getEffectClass(evt.currentTarget), resize.previewImg);
+        resize.quantity = utility.defaultQuantity;
         // utility.effectValue = '';
-        if (editorResize.previewImg.classList.contains('effects__preview--none')) {
+        if (resize.previewImg.classList.contains('effects__preview--none')) {
           sliderBlock.classList.add('hidden');
-        } else if (sliderBlock.classList.contains('hidden') && !editorResize.previewImg.classList.contains('effects__preview--none')) {
+        } else if (sliderBlock.classList.contains('hidden') && !resize.previewImg.classList.contains('effects__preview--none')) {
           sliderBlock.classList.remove('hidden');
         }
       });

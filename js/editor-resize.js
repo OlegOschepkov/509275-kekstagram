@@ -5,7 +5,7 @@ window.editorResize = (function () {
   var imageEditor = document.querySelector('.img-upload__overlay');
   // imageEditor.classList.remove('hidden');
   var utility = window.utility;
-  var editorResize = window.editorResize;
+  var quantity = window.utility.defaultQuantity;
 
   var minusSize = document.querySelector('.resize__control--minus');
   var plusSize = document.querySelector('.resize__control--plus');
@@ -22,9 +22,9 @@ window.editorResize = (function () {
   utility.findPopupCloseButton(imageEditor).addEventListener('click', function () {
     utility.addClassHidden(imageEditor);
     imageEditor.removeAttribute('value');
-    window.editorEffects.clearClassAndStyle(editorResize.previewImg);
-    editorResize.setValueSize(utility.defaultQuantity);
-    editorResize.quantity = utility.defaultQuantity;
+    window.editorEffects.clearClassAndStyle(previewImg);
+    setValueSize(utility.defaultQuantity);
+    quantity = utility.defaultQuantity;
   });
 
   var oversizeCheck = function (number) {
@@ -45,13 +45,13 @@ window.editorResize = (function () {
 
   var setNewSize = function (step, increase) {
     if (increase === 1) {
-      window.editorResize.quantity = window.editorResize.quantity + step;
+      quantity = quantity + step;
     } else {
-      window.editorResize.quantity = window.editorResize.quantity - step;
+      quantity = quantity - step;
     }
-    window.editorResize.quantity = oversizeCheck(window.editorResize.quantity);
-    window.editorResize.setValueSize(window.editorResize.quantity);
-    var size = window.editorResize.quantity / 100;
+    quantity = oversizeCheck(quantity);
+    setValueSize(quantity);
+    var size = quantity / 100;
     return size;
   };
 
@@ -67,12 +67,22 @@ window.editorResize = (function () {
     }
   };
 
+  minusSize.addEventListener('click', function () {
+    setNewSize(QUANITY_STEP, 0);
+    updatePreviewStyle(utility.effectValue, utility.sizeValue);
+  });
+
+  plusSize.addEventListener('click', function () {
+    setNewSize(QUANITY_STEP, 1);
+    updatePreviewStyle(utility.effectValue, utility.sizeValue);
+  });
+
   return {
     QUANITY_STEP: QUANITY_STEP,
     minusSize: minusSize,
     plusSize: plusSize,
     updatePreviewStyle: updatePreviewStyle,
-    quantity: window.utility.defaultQuantity,
+    quantity: quantity,
     setValueSize: setValueSize,
     previewImg: previewImg,
     setNewSize: setNewSize
