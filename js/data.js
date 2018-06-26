@@ -67,27 +67,27 @@ window.data = (function () {
   var sourceLinks = shuffle(generateSrcArray(COUNT_OF_PICTURES));
 
   // создаю массив комментов для каждой фотки.
-  var generateComments = function (commentsArr, min, max) {
-    var messageArray = [];
+  var generateComments = function (messages, min, max) {
+    var messages = [];
     for (var j = 0; j <= randomInt(min, max); j++) {
       var singleComment;
       if (Math.random() > 0.5) {
-        singleComment = randomElement(commentsArr) + ' ' + randomElement(commentsArr);
+        singleComment = randomElement(messages) + ' ' + randomElement(messages);
       } else {
-        singleComment = randomElement(commentsArr);
+        singleComment = randomElement(messages);
       }
-      messageArray.push(singleComment);
+      messages.push(singleComment);
     }
-    return messageArray;
+    return messages;
   };
 
-  var generateDescription = function (descriptionArr) {
+  var generateDescription = function (descriptions) {
     return randomElement(descriptionArr);
   };
 
   // создаю массив картинок и присваиваю свойства
-  var generatePictures = function (commentsArr, descriptionArr) {
-    var picturesArr = [];
+  var generatePictures = function (commentaries, descriptions) {
+    var pictures = [];
     for (var i = 0; i < COUNT_OF_PICTURES; i++) {
       var commentsArray = generateComments(commentStrings, MIN_COMMENTS, MAX_COMMENTS);
       var picture = {
@@ -95,11 +95,11 @@ window.data = (function () {
         likes: randomInt(MIN_LIKES, MAX_LIKES),
         comments: countComments(commentsArray),
         commentsText: commentsArray,
-        description: generateDescription(descriptionArr)
+        description: generateDescription(descriptions)
       };
-      picturesArr.push(picture);
+      pictures.push(picture);
     }
-    return picturesArr;
+    return pictures;
   };
 
   var pictures = generatePictures(commentStrings, descriptions);
