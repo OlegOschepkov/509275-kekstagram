@@ -3,7 +3,7 @@
 window.editorResize = (function () {
   var uploadFile = document.querySelector('#upload-file');
   var imageEditor = document.querySelector('.img-upload__overlay');
-  imageEditor.classList.remove('hidden');
+  // imageEditor.classList.remove('hidden');
 
 
   var minusSize = document.querySelector('.resize__control--minus');

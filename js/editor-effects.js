@@ -3,7 +3,7 @@ window.editorEffects = (function () {
   // Применение эффекта и изменение размера
   var effect = document.querySelectorAll('.effects__item');
   var sliderBlock = document.querySelector('.img-upload__scale');
-  // sliderBlock.classList.add('hidden');
+  sliderBlock.classList.add('hidden');
   var scaleValue = document.querySelector('.scale__value');
 
   var clearClassAndStyle = function (element) {
