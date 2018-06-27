@@ -1,8 +1,11 @@
 'use strict';
 
 window.data = (function () {
-  var comentCount = document.querySelector('.social__comment-count'); // MM
+  var commentCount = document.querySelector('.social__comment-count'); // MM
   var addComment = document.querySelector('.social__loadmore');
+  var utility = window.utility;
+  var randomInt = utility.getRandomInt;
+  var randomElement = utility.getRandomElement;
 
   var commentStrings = [
     'Всё отлично!',
@@ -37,7 +40,7 @@ window.data = (function () {
     block.classList.add('visually-hidden');
   };
 
-  hideBlock(comentCount);
+  hideBlock(commentCount);
   hideBlock(addComment);
 
   // создаю и перемешиваю массив номеров фоток
@@ -64,49 +67,41 @@ window.data = (function () {
   var sourceLinks = shuffle(generateSrcArray(COUNT_OF_PICTURES));
 
   // создаю массив комментов для каждой фотки.
-  var generateComments = function (commentsArr, min, max) {
+  var generateComments = function (commentsArray, min, max) {
     var messageArray = [];
-    for (var j = 0; j <= window.utility.getRandomInt(min, max); j++) {
+    for (var j = 0; j <= randomInt(min, max); j++) {
       var singleComment;
       if (Math.random() > 0.5) {
-        singleComment = window.utility.getRandomElement(commentsArr) + ' ' + window.utility.getRandomElement(commentsArr);
+        singleComment = randomElement(commentsArray) + ' ' + randomElement(commentsArray);
       } else {
-        singleComment = window.utility.getRandomElement(commentsArr);
+        singleComment = randomElement(commentsArray);
       }
       messageArray.push(singleComment);
     }
     return messageArray;
   };
 
-  var generateDescription = function (descriptionArr) {
-    return window.utility.getRandomElement(descriptionArr);
+  var generateDescription = function (descriptionsArray) {
+    return randomElement(descriptionsArray);
   };
 
   // создаю массив картинок и присваиваю свойства
-  var generatePictures = function (commentsArr, descriptionArr) {
+  var generatePictures = function (commentariessArray, descriptionsArray) {
     var picturesArr = [];
     for (var i = 0; i < COUNT_OF_PICTURES; i++) {
       var commentsArray = generateComments(commentStrings, MIN_COMMENTS, MAX_COMMENTS);
       var picture = {
         url: 'photos/' + (sourceLinks[i] + 1) + '.jpg',
-        likes: window.utility.getRandomInt(MIN_LIKES, MAX_LIKES),
+        likes: randomInt(MIN_LIKES, MAX_LIKES),
         comments: countComments(commentsArray),
         commentsText: commentsArray,
-        description: generateDescription(descriptionArr)
+        description: generateDescription(descriptionsArray)
       };
       picturesArr.push(picture);
     }
     return picturesArr;
   };
 
-  var hideUnnecesary = function (blockClass) {
-    var htmlBlock = document.querySelector(blockClass);
-    htmlBlock.classList.add('.visually-hidden');
-  };
-
-  // спрячу .social__comment-count и .social__loadmore
-  hideUnnecesary('.social__comment-count');
-  hideUnnecesary('.social__loadmore');
   var pictures = generatePictures(commentStrings, descriptions);
 
   return {
