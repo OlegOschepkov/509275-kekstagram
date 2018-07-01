@@ -51,7 +51,7 @@
   };
 
   var smallPictures = document.querySelectorAll('.picture__link');
-
+  console.log(smallPictures);
   addBigPictureListener(smallPictures);
 
   var removeOldElements = function () {
