@@ -85,7 +85,8 @@ window.editorResize = (function () {
     quantity: quantity,
     setValueSize: setValueSize,
     previewImg: previewImg,
-    setNewSize: setNewSize
+    setNewSize: setNewSize,
+    imageEditor: imageEditor
   };
 
 })();

@@ -1,11 +1,11 @@
 'use strict';
 
 window.data = (function () {
-  var commentCount = document.querySelector('.social__comment-count'); // MM
-  var addComment = document.querySelector('.social__loadmore');
-  var utility = window.utility;
-  var randomInt = utility.getRandomInt;
-  var randomElement = utility.getRandomElement;
+  // var commentCount = document.querySelector('.social__comment-count'); // MM
+  // var addComment = document.querySelector('.social__loadmore');
+  // var utility = window.utility;
+  // var randomInt = utility.getRandomInt;
+  // var randomElement = utility.getRandomElement;
 
   // var commentStrings = [
   //   'Всё отлично!',
@@ -36,12 +36,12 @@ window.data = (function () {
   //   return array.length;
   // };
 
-  var hideBlock = function (block) {
-    block.classList.add('visually-hidden');
-  };
+  // var hideBlock = function (block) {
+  //   block.classList.add('visually-hidden');
+  // };
 
-  hideBlock(commentCount);
-  hideBlock(addComment);
+  // hideBlock(commentCount);
+  // hideBlock(addComment);
 
   // создаю и перемешиваю массив номеров фоток
   // var generateSrcArray = function (countOfPicures) {
@@ -103,9 +103,33 @@ window.data = (function () {
   // };
   //
   // var pictures = generatePictures(commentStrings, descriptions);
+  // var getPicturesArray =
+  // var pictures;
+  // var onLoad = function (severResponse) {
+  //   return severResponse;
+  // };
+  //
+  // var onError = function (errorMessage) {
+  //   var node = document.createElement('div');
+  //   node.style = 'z-index: 100; width: 500px; height: 150px; position: absolute; top: 50%; left: 50%; transform: translateY(-50%) translateX(-50%); font-size: 30px; color: black; background-color: red; text-align: center';
+  //   node.textContent = errorMessage;
+  //   document.body.insertAdjacentElement('afterbegin', node);
+  // };
+  //
+  //
+  // window.backend.load(onLoad, onError);
+  //
+  // console.log(pictures);
+  var loadData = function (callback) {
+    window.backend.load(function (response) {
+      var tempData = response;
+      window.data.pictures = tempData;
+      callback(window.data.pictures);
+    });
+  };
 
   return {
-    // pictures: pictures,
+    loadData: loadData,
     countComments: function (array) {
       return array.length;
     },

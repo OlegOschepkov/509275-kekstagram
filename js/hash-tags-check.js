@@ -1,6 +1,7 @@
 'use strict';
 (function () {
   var hashTagField = document.querySelector('.text__hashtags');
+  var form = document.querySelector('.img-upload__form');
 
   var checkHashTagQuantity = function (element, array) {
     var message = '';
@@ -43,6 +44,15 @@
 
   hashTagField.addEventListener('input', function () {
     checkHashTagValidity(hashTagField);
+  });
+
+  var sendSuccess = function () {
+    window.editorResize.imageEditor.classList.add('hidden');
+  };
+
+  form.addEventListener('submit', function (evt) {
+    window.backend.save(new FormData(form), sendSuccess, window.smallRender.onError);
+    evt.preventDefault();
   });
 
 })();
