@@ -33,16 +33,19 @@ window.smallRender = (function () {
   //   return pics;
   // };
   //
-
-  var pictureArray = [];
-  var onLoad = function (pictures) {
-    for (var i = 0; i < window.data.COUNT_OF_PICTURES; i++) {
-      window.utility.fragment.appendChild(renderPhoto(pictures[i]));
-      setDataAttrib(similarListTemplate, i);
-      pictureArray.push(pictures[i]);
-    }
+  var renderTile = function (array) {
+    array.forEach(function (element) {
+      window.utility.fragment.appendChild(renderPhoto(element));
+      setDataAttrib(similarListTemplate, element);
+    });
     similarListElement.appendChild(window.utility.fragment);
+  };
+
+
+  var onLoad = function (pictures) {
+    renderTile(pictures);
     var smallPictures = document.querySelectorAll('.picture__link');
+    window.sorting.makeSorting(pictures);
     window.renderBig.addBigPictureListener(smallPictures);
   };
 
@@ -69,6 +72,7 @@ window.smallRender = (function () {
   //
   //
   return {
-    onError: onError
+    onError: onError,
+    renderTile: renderTile
   };
 })();
