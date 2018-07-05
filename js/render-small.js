@@ -18,9 +18,9 @@ window.smallRender = (function () {
     return photoElement;
   };
 
-  var setDataAttrib = function (element, index) {
-    element.setAttribute('data-index', index);
-  };
+  // var setDataAttrib = function (element, index) {
+  //   element.setAttribute('data-index', index);
+  // };
 
   // for (var j = 0; j < window.data.pictures.length; j++) {
   //   window.utility.fragment.appendChild(renderPhoto(window.data.pictures[j]));
@@ -38,7 +38,6 @@ window.smallRender = (function () {
       window.utility.fragment.appendChild(renderPhoto(element));
       // similarListTemplate.setAttribute();
       // setDataAttrib(similarListTemplate, element.indexForData);
-      console.log(element.indexForData);
     });
     similarListElement.appendChild(window.utility.fragment);
   };

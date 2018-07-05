@@ -47,7 +47,6 @@ window.renderBig = (function () {
 
   var getIndexAndRender = function (evt) {
     var i = evt.currentTarget.getAttribute('data-index');
-    console.log(window.data.pictures[i]);
     renderBigPicture(window.data.pictures[i]);
     currentBigPicture = window.data.pictures[i];
   };
