@@ -36,6 +36,14 @@ window.sorting = (function () {
     block.className = classes.join(' ');
   };
 
+  var switchActiveClass = function (block) {
+    var filterButtons = document.querySelectorAll('.img-filters__button');
+    Array.from(filterButtons).forEach(function (element) {
+      element.classList.remove('img-filters__button--active');
+    });
+    block.classList.add('img-filters__button--active');
+  };
+
   removeClass(filtersBlock, 'img-filters--inactive');
 
   var createNewTiles = function (sortingFunction, array) {
@@ -53,14 +61,17 @@ window.sorting = (function () {
 
     filterNew.addEventListener('click', function () {
       debouncedCreateNewTiles(makeSortByNew, copyOfArray);
+      switchActiveClass(filterNew);
     });
 
     filterDiscussed.addEventListener('click', function () {
       debouncedCreateNewTiles(makeSortByComments, copyOfArray);
+      switchActiveClass(filterDiscussed);
     });
 
     filterPopular.addEventListener('click', function () {
       debouncedCreateNewTiles(makeNoSorting, array);
+      switchActiveClass(filterPopular);
     });
   };
 
