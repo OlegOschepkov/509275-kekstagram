@@ -21,6 +21,10 @@ window.sorting = (function () {
     };
   };
 
+  var debouncedCreateNewTiles = debounce(function (sortingFunction, array) {
+    createNewTiles(sortingFunction, array);
+  });
+
   var removeClass = function (block, classname) {
     var classes = block.className.split(' ');
     for (var i = 0; i < classes.length; i++) {
@@ -40,21 +44,23 @@ window.sorting = (function () {
       element.remove();
     });
     window.smallRender.renderTile(sortingFunction(array));
+    var smallPictures = document.querySelectorAll('.picture__link');
+    window.renderBig.addBigPictureListener(smallPictures);
   };
 
   var makeSorting = function (array) {
     var copyOfArray = array.slice();
 
     filterNew.addEventListener('click', function () {
-      debounce(createNewTiles(makeSortByNew, copyOfArray));
+      debouncedCreateNewTiles(makeSortByNew, copyOfArray);
     });
 
     filterDiscussed.addEventListener('click', function () {
-      debounce(createNewTiles(makeSortByComments, copyOfArray));
+      debouncedCreateNewTiles(makeSortByComments, copyOfArray);
     });
 
     filterPopular.addEventListener('click', function () {
-      debounce(createNewTiles(makeNoSorting, array));
+      debouncedCreateNewTiles(makeNoSorting, array);
     });
   };
 
@@ -80,7 +86,7 @@ window.sorting = (function () {
     var tempArray = array.slice();
     tempArray.sort(function (right, left) {
       return left.comments.length - right.comments.length;
-    })
+    });
     return tempArray;
   };
 

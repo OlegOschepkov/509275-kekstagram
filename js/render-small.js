@@ -5,7 +5,7 @@ window.smallRender = (function () {
   var similarListTemplate = document.querySelector('#picture')
     .content
     .querySelector('.picture__link');
-  similarListTemplate.setAttribute('data-index', 0);
+  // similarListTemplate.setAttribute('data-index', 0);
 
 
   var renderPhoto = function (picture) {
@@ -14,12 +14,12 @@ window.smallRender = (function () {
     photoElement.querySelector('.picture__img').src = picture.url;
     photoElement.querySelector('.picture__stat--comments').textContent = window.data.countComments(picture.comments);
     photoElement.querySelector('.picture__stat--likes').textContent = picture.likes;
-
+    photoElement.setAttribute('data-index', picture.indexForData);
     return photoElement;
   };
 
-  var setDataAttrib = function (element, j) {
-    element.setAttribute('data-index', j + 1);
+  var setDataAttrib = function (element, index) {
+    element.setAttribute('data-index', index);
   };
 
   // for (var j = 0; j < window.data.pictures.length; j++) {
@@ -36,17 +36,22 @@ window.smallRender = (function () {
   var renderTile = function (array) {
     array.forEach(function (element) {
       window.utility.fragment.appendChild(renderPhoto(element));
-      setDataAttrib(similarListTemplate, element);
+      // similarListTemplate.setAttribute();
+      // setDataAttrib(similarListTemplate, element.indexForData);
+      console.log(element.indexForData);
     });
     similarListElement.appendChild(window.utility.fragment);
   };
 
 
   var onLoad = function (pictures) {
+    pictures.forEach(function (element, index) {
+      element.indexForData = index;
+    });
     renderTile(pictures);
     var smallPictures = document.querySelectorAll('.picture__link');
-    window.sorting.makeSorting(pictures);
     window.renderBig.addBigPictureListener(smallPictures);
+    window.sorting.makeSorting(pictures);
   };
 
   var onError = function (errorMessage) {
