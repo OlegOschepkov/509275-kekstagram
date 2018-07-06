@@ -9,7 +9,7 @@ window.utility = (function () {
       return element.querySelector('.cancel');
     },
     effectValue: '',
-    defaultQuantity: 100,
+    DEFAULT_QUANTITY: 100,
     previewImgBlock: document.querySelector('.img-upload__preview'),
     slider: document.querySelector('.img-upload__scale'),
     // sliderCoords: document.querySelector('.img-upload__scale').getBoundingClientRect(),
@@ -18,7 +18,7 @@ window.utility = (function () {
     // pinCoords: document.querySelector('.scale__pin').getBoundingClientRect(),
     scaleLine: document.querySelector('.scale__line'),
     scaleLevel: document.querySelector('.scale__level'),
-    proportion: function () {
+    getProportion: function () {
       var percentage = Math.floor(100 / (window.utility.scaleLine.offsetWidth / window.utility.sliderPin.offsetLeft));
       if (percentage < 0) {
         percentage = 0;

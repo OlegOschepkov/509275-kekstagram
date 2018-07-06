@@ -2,10 +2,11 @@
 (function () {
   var hashTagField = document.querySelector('.text__hashtags');
   var form = document.querySelector('.img-upload__form');
+  var MAX_HASH_QUANTITY = 5;
 
   var checkHashTagQuantity = function (element, array) {
     var message = '';
-    if (array.length > 5) {
+    if (array.length > MAX_HASH_QUANTITY) {
       message = 'Максимальное количество хешгетов - 5. Удалите один или несколько хешгетов';
     }
     return message;
