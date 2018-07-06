@@ -37,9 +37,9 @@ window.editorEffects = (function () {
   var applyEffect = function (collection) {
     for (var i = 0; i < collection.length; i++) {
       collection[i].addEventListener('click', function (evt) {
-        resize.setValueSize(utility.defaultQuantity);
+        resize.setValueSize(utility.DEFAULT_QUANTITY);
         setEffectClass(getEffectClass(evt.currentTarget), resize.previewImg);
-        resize.quantity = utility.defaultQuantity;
+        // resize.quantity = utility.DEFAULT_QUANTITY;
         // utility.effectValue = '';
         if (resize.previewImg.classList.contains('effects__preview--none')) {
           sliderBlock.classList.add('hidden');
@@ -56,7 +56,7 @@ window.editorEffects = (function () {
     var quantity;
     var effectName;
     var newStyle;
-    var temp = ((1 / 100) * utility.proportion()).toFixed(2); // округляю чтоб избежать бага с добавлением одной миллиардной
+    var temp = ((1 / 100) * utility.getProportion()).toFixed(2); // округляю чтоб избежать бага с добавлением одной миллиардной
     if (temp <= 0) {
       temp = 0;
     } else if (temp >= 1) {

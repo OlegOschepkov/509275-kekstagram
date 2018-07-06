@@ -16,9 +16,9 @@ window.renderBig = (function () {
 
   var createNewElement = function (picture, commArray) {
     for (indexNumber; indexNumber < commArray.length && indexNumber < maxIndexNumber; indexNumber++) {
-      var MockLi = bigPicture.querySelectorAll('.social__comment');
-      MockLi[0].classList.add('visually-hidden');
-      MockLi[1].classList.add('visually-hidden');
+      var mockLi = bigPicture.querySelectorAll('.social__comment');
+      mockLi[0].classList.add('visually-hidden');
+      mockLi[1].classList.add('visually-hidden');
       var listElem = document.createElement('li');
       listElem.className = 'social__comment social__comment--text';
       bigPictureBlocks.appendChild(listElem);
@@ -42,6 +42,7 @@ window.renderBig = (function () {
     bigPicture.querySelector('.likes-count').textContent = picture.likes;
     bigPicture.querySelector('.social__caption').textContent = picture.description;
     bigPicture.classList.remove('hidden');
+    document.querySelector('body').classList.add('modal-open');
     createNewElement(picture, picture.comments);
   };
 
@@ -69,6 +70,7 @@ window.renderBig = (function () {
   window.utility.findPopupCloseButton(bigPicture).addEventListener('click', function () {
     removeOldElements();
     window.utility.addClassHidden(bigPicture);
+    document.querySelector('body').classList.remove('modal-open');
   });
 
   loadMore.addEventListener('click', function () {

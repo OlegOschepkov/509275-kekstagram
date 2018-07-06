@@ -5,7 +5,7 @@ window.editorResize = (function () {
   var imageEditor = document.querySelector('.img-upload__overlay');
   // imageEditor.classList.remove('hidden');
   var utility = window.utility;
-  var quantity = window.utility.defaultQuantity;
+  var quantity = window.utility.DEFAULT_QUANTITY;
 
   var minusSize = document.querySelector('.resize__control--minus');
   var plusSize = document.querySelector('.resize__control--plus');
@@ -23,11 +23,11 @@ window.editorResize = (function () {
     utility.addClassHidden(imageEditor);
     imageEditor.removeAttribute('value');
     window.editorEffects.clearClassAndStyle(previewImg);
-    setValueSize(utility.defaultQuantity);
-    quantity = utility.defaultQuantity;
+    setValueSize(utility.DEFAULT_QUANTITY);
+    quantity = utility.DEFAULT_QUANTITY;
   });
 
-  var oversizeCheck = function (number) {
+  var checkOversize = function (number) {
     if (number >= MAX_QUANITY) {
       number = MAX_QUANITY;
     } else if (number <= MIN_QUANITY) {
@@ -41,7 +41,7 @@ window.editorResize = (function () {
     previewImg.setAttribute('style', utility.makeResize(size));
   };
 
-  setValueSize(utility.defaultQuantity);
+  setValueSize(utility.DEFAULT_QUANTITY);
 
   var setNewSize = function (step, increase) {
     if (increase === 1) {
@@ -49,7 +49,7 @@ window.editorResize = (function () {
     } else {
       quantity = quantity - step;
     }
-    quantity = oversizeCheck(quantity);
+    quantity = checkOversize(quantity);
     setValueSize(quantity);
     var size = quantity / 100;
     return size;
