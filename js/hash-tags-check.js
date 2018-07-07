@@ -1,7 +1,8 @@
 'use strict';
-(function () {
+window.hashTags = (function () {
   var hashTagField = document.querySelector('.text__hashtags');
   var form = document.querySelector('.img-upload__form');
+  var textArea = document.querySelector('.text__description');
   var MAX_HASH_QUANTITY = 5;
 
   var checkHashTagQuantity = function (element, array) {
@@ -43,17 +44,20 @@
     element.setCustomValidity(errorMessage);
   };
 
-  hashTagField.addEventListener('input', function () {
-    checkHashTagValidity(hashTagField);
-  });
+  hashTagField.addEventListener('input', checkHashTagValidity(hashTagField));
 
   var sendSuccess = function () {
-    window.editorResize.imageEditor.classList.add('hidden');
+    window.editorResize.closeEditor();
   };
 
   form.addEventListener('submit', function (evt) {
     window.backend.save(new FormData(form), sendSuccess, window.smallRender.onError);
     evt.preventDefault();
   });
+
+  return {
+    hashTagField: hashTagField,
+    textArea: textArea
+  };
 
 })();

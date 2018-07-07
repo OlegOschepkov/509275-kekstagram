@@ -16,18 +16,33 @@ window.editorResize = (function () {
 
   uploadFile.addEventListener('change', function () {
     imageEditor.classList.remove('hidden');
+    document.addEventListener('keydown', onEscPress);
     window.editorEffects.sliderBlock.classList.add('hidden');
+    utility.findPopupCloseButton(imageEditor).addEventListener('click', closeEditor);
+    minusSize.addEventListener('click', onSizeClick(0));
+    plusSize.addEventListener('click', onSizeClick(1));
   });
 
-  utility.findPopupCloseButton(imageEditor).addEventListener('click', function () {
-    utility.addClassHidden(imageEditor);
+  var onEscPress = function (evt) {
+    if (evt.target !== window.hashTags.hashTagField && evt.target !== window.hashTags.textArea && evt.keyCode === window.renderBig.ESC_KEYCODE) {
+      closeEditor();
+    }
+  };
+
+  var closeEditor = function () {
     imageEditor.removeAttribute('value');
     window.editorEffects.clearClassAndStyle(previewImg);
     setValueSize(utility.DEFAULT_QUANTITY);
     quantity = utility.DEFAULT_QUANTITY;
     utility.effectValue = '';
     utility.sizeValue = '';
-  });
+    utility.addClassHidden(imageEditor);
+    document.removeEventListener('keydown', onEscPress);
+    minusSize.removeEventListener('click', onSizeClick(0));
+    plusSize.removeEventListener('click', onSizeClick(1));
+    window.upload.userPicture.setAttribute('src', 'img/upload-default-image.jpg');
+  };
+
 
   var setValueSize = function (size) {
     utility.valueSize.setAttribute('value', size + '%');
@@ -69,15 +84,10 @@ window.editorResize = (function () {
     }
   };
 
-  minusSize.addEventListener('click', function () {
-    setNewSize(QUANITY_STEP, 0);
+  var onSizeClick = function (number) {
+    setNewSize(QUANITY_STEP, number);
     updatePreviewStyle(utility.effectValue, utility.sizeValue);
-  });
-
-  plusSize.addEventListener('click', function () {
-    setNewSize(QUANITY_STEP, 1);
-    updatePreviewStyle(utility.effectValue, utility.sizeValue);
-  });
+  };
 
   return {
     QUANITY_STEP: QUANITY_STEP,
@@ -88,7 +98,8 @@ window.editorResize = (function () {
     setValueSize: setValueSize,
     previewImg: previewImg,
     setNewSize: setNewSize,
-    imageEditor: imageEditor
+    imageEditor: imageEditor,
+    closeEditor: closeEditor
   };
 
 })();
