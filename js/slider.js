@@ -51,14 +51,16 @@ window.slider = (function () {
       startCoords = {
         x: moveEvt.clientX
       };
+      var lineCoords = utility.scaleLine.getBoundingClientRect();
 
-      if (pinX < 0) {
+      if (startCoords.x < lineCoords.left) {
         utility.sliderPin.style.left = 0 + 'px';
-        startCoords.x = utility.scaleLine.left;
+        startCoords.x = lineCoords.left;
         utility.sliderPin.removeEventListener('mousedown', sliderHandler);
         utility.sliderPin.addEventListener('mousedown', sliderHandler);
-      } else if (pinX > utility.scaleLine.offsetWidth) {
+      } else if (startCoords.x > lineCoords.right) {
         utility.sliderPin.style.left = utility.scaleLine.offsetWidth + 'px';
+        startCoords.x = lineCoords.right;
         utility.sliderPin.removeEventListener('mousedown', sliderHandler);
         utility.sliderPin.addEventListener('mousedown', sliderHandler);
       } else {
@@ -83,4 +85,7 @@ window.slider = (function () {
 
   utility.sliderPin.addEventListener('mousedown', sliderHandler);
 
+  return {
+    pinX: pinX
+  };
 })();

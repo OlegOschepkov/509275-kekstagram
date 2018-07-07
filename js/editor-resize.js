@@ -25,7 +25,16 @@ window.editorResize = (function () {
     window.editorEffects.clearClassAndStyle(previewImg);
     setValueSize(utility.DEFAULT_QUANTITY);
     quantity = utility.DEFAULT_QUANTITY;
+    utility.effectValue = '';
+    utility.sizeValue = '';
   });
+
+  var setValueSize = function (size) {
+    utility.valueSize.setAttribute('value', size + '%');
+    previewImg.setAttribute('style', utility.makeResize(size));
+  };
+
+  setValueSize(utility.DEFAULT_QUANTITY);
 
   var checkOversize = function (number) {
     if (number >= MAX_QUANITY) {
@@ -36,18 +45,11 @@ window.editorResize = (function () {
     return number;
   };
 
-  var setValueSize = function (size) {
-    utility.valueSize.setAttribute('value', size + '%');
-    previewImg.setAttribute('style', utility.makeResize(size));
-  };
-
-  setValueSize(utility.DEFAULT_QUANTITY);
-
   var setNewSize = function (step, increase) {
     if (increase === 1) {
-      quantity = quantity + step;
+      quantity = parseInt(utility.valueSize.getAttribute('value'), 10) + step;
     } else {
-      quantity = quantity - step;
+      quantity = parseInt(utility.valueSize.getAttribute('value'), 10) - step;
     }
     quantity = checkOversize(quantity);
     setValueSize(quantity);
