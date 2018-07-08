@@ -1,12 +1,12 @@
 'use strict';
 
 window.sorting = (function () {
-  var filtersBlock = document.querySelector('.img-filters');
   var NUMBER_OF_NEW = 10;
+  var DEBOUNCE_INTERVAL = 500;
+  var filtersBlock = document.querySelector('.img-filters');
   var filterPopular = filtersBlock.querySelector('#filter-popular');
   var filterNew = filtersBlock.querySelector('#filter-new');
   var filterDiscussed = filtersBlock.querySelector('#filter-discussed');
-  var DEBOUNCE_INTERVAL = 500;
 
   var debounce = function (fun) {
     var lastTimeout = null;
@@ -108,6 +108,7 @@ window.sorting = (function () {
   // var newOrderList = createNewList();
 
   return {
-    makeSorting: makeSorting
+    makeSorting: makeSorting,
+    removeClass: removeClass
   };
 })();

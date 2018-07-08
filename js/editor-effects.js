@@ -7,6 +7,7 @@ window.editorEffects = (function () {
   var scaleValue = document.querySelector('.scale__value');
   var utility = window.utility;
   var resize = window.editorResize;
+  var maxEffect;
 
 
   var clearClassAndStyle = function (element) {
@@ -34,13 +35,15 @@ window.editorEffects = (function () {
     utility.effectValue = window.editorEffects.setNewStyle(resize.previewImg);
   };
 
-  var applyEffect = function (collection) {
+  var applyNewEffect = function (collection) {
     for (var i = 0; i < collection.length; i++) {
       collection[i].addEventListener('click', function (evt) {
         resize.setValueSize(utility.DEFAULT_QUANTITY);
         setEffectClass(getEffectClass(evt.currentTarget), resize.previewImg);
-        // resize.quantity = utility.DEFAULT_QUANTITY;
-        // utility.effectValue = '';
+        utility.effectValue = maxEffect;
+        resize.updatePreviewStyle(maxEffect, utility.makeResize(utility.DEFAULT_QUANTITY));
+        window.utility.sliderPin.style.left = utility.scaleLine.offsetWidth + 'px';
+        utility.scaleLevel.style.width = utility.sliderPin.style.left;
         if (resize.previewImg.classList.contains('effects__preview--none')) {
           sliderBlock.classList.add('hidden');
         } else if (sliderBlock.classList.contains('hidden') && !resize.previewImg.classList.contains('effects__preview--none')) {
@@ -50,7 +53,7 @@ window.editorEffects = (function () {
     }
   };
 
-  applyEffect(effect);
+  applyNewEffect(effect);
 
   var setNewStyle = function (block) {
     var quantity;
@@ -65,25 +68,32 @@ window.editorEffects = (function () {
     if (block.classList.contains('effects__preview--none')) {
       quantity = 0;
       effectName = 'none';
+      maxEffect = '';
     } else if (block.classList.contains('effects__preview--chrome')) {
       quantity = 1 * temp;
       effectName = 'grayscale';
+      maxEffect = 1;
     } else if (block.classList.contains('effects__preview--sepia')) {
       quantity = 1 * temp;
       effectName = 'sepia';
+      maxEffect = 1;
     } else if (block.classList.contains('effects__preview--marvin')) {
       quantity = 100 * temp + '%';
       effectName = 'invert';
+      maxEffect = '100%';
     } else if (block.classList.contains('effects__preview--phobos')) {
       quantity = temp * 3 + 'px';
       effectName = 'blur';
+      maxEffect = '3px';
     } else if (block.classList.contains('effects__preview--heat')) {
       quantity = 1 + temp * 2;
       effectName = 'brightness';
+      maxEffect = 3;
     } else if (quantity < 0) {
       quantity = 0;
     }
     newStyle = 'filter: ' + effectName + '(' + quantity + ');';
+    maxEffect = 'filter: ' + effectName + '(' + maxEffect + ');';
     utility.effectValue = newStyle;
     return newStyle;
   };

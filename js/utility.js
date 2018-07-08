@@ -2,6 +2,7 @@
 
 window.utility = (function () {
   return {
+    DEFAULT_QUANTITY: 100,
     addClassHidden: function (element) {
       element.classList.add('hidden');
     },
@@ -9,7 +10,6 @@ window.utility = (function () {
       return element.querySelector('.cancel');
     },
     effectValue: '',
-    DEFAULT_QUANTITY: 100,
     previewImgBlock: document.querySelector('.img-upload__preview'),
     slider: document.querySelector('.img-upload__scale'),
     // sliderCoords: document.querySelector('.img-upload__scale').getBoundingClientRect(),

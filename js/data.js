@@ -1,6 +1,7 @@
 'use strict';
 
 window.data = (function () {
+  var COUNT_OF_PICTURES = 25;
   // var commentCount = document.querySelector('.social__comment-count'); // MM
   // var addComment = document.querySelector('.social__loadmore');
   // var utility = window.utility;
@@ -16,16 +17,15 @@ window.data = (function () {
   //   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
   // ];
   //
-  // var descriptions = [
-  //   'Тестим новую камеру!',
-  //   'Затусили с друзьями на море',
-  //   'Как же круто тут кормят',
-  //   'Отдыхаем...',
-  //   'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......',
-  //   'Вот это тачка!'
-  // ];
+  var descriptions = [
+    'Тестим новую камеру!',
+    'Затусили с друзьями на море',
+    'Как же круто тут кормят',
+    'Отдыхаем...',
+    'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......',
+    'Вот это тачка!'
+  ];
 
-  var COUNT_OF_PICTURES = 25;
   // var MIN_LIKES = 15;
   // var MAX_LIKES = 200;
   // var MIN_COMMENTS = 1;
@@ -133,7 +133,7 @@ window.data = (function () {
     countComments: function (array) {
       return array.length;
     },
-    COUNT_OF_PICTURES: COUNT_OF_PICTURES
+    COUNT_OF_PICTURES: COUNT_OF_PICTURES,
+    descriptions: descriptions
   };
-
 })();
