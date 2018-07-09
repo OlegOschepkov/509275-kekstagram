@@ -39,7 +39,6 @@ window.utility = (function () {
     },
     getRandomElement: function (array) {
       return array[Math.floor(Math.random() * array.length)];
-    },
-    fragment: document.createDocumentFragment(),
+    }
   };
 })();

@@ -10,6 +10,7 @@ window.hashTags = (function () {
     .content
     .querySelectorAll('.img-upload__message');
   var errorWindow;
+  var fragment = document.createDocumentFragment();
 
   var findBlock = function () {
     Array.from(errorWindowTemplate).forEach(function (element) {
@@ -28,38 +29,38 @@ window.hashTags = (function () {
   };
 
   var checkCommentaryLength = function (element) {
-    var array = element.value.split('');
+    var lettersArray = element.value.split('');
     var message = '';
-    if (array.length > MAX_COMMENTARY_LENGTH) {
+    if (lettersArray.length > MAX_COMMENTARY_LENGTH) {
       message = 'Максимальная длина комментария - 140 символов';
     }
     return message;
   };
 
-  var checkHashTagQuantity = function (element, array) {
+  var checkHashTagQuantity = function (element, tagsArray) {
     var message = '';
-    if (array.length > MAX_HASH_QUANTITY) {
+    if (tagsArray.length > MAX_HASH_QUANTITY) {
       message = 'Максимальное количество хешгетов - 5. Удалите один или несколько хешгетов';
     }
     return message;
   };
 
-  var checkDuplicates = function (element, array) {
+  var checkDuplicates = function (element, tagsArray) {
     var message = '';
-    array.sort();
-    for (var i = 0; i < array.length - 1; i++) {
-      if (String(array[i]).toUpperCase() === String(array[i + 1]).toUpperCase()) {
+    tagsArray.sort();
+    for (var i = 0; i < tagsArray.length - 1; i++) {
+      if (String(tagsArray[i]).toUpperCase() === String(tagsArray[i + 1]).toUpperCase()) {
         message = 'один и тот же хэш-тег не может быть использован дважды';
       }
     }
     return message;
   };
 
-  var checkHashTags = function (element, array) {
+  var checkHashTags = function (element, tagsArray) {
     var message = '';
     var regExp = /^#[^\s]{1,19}$/i;
-    for (var i = 0; i < array.length; i++) {
-      if (regExp.test(array[i].toString()) === false) {
+    for (var i = 0; i < tagsArray.length; i++) {
+      if (regExp.test(tagsArray[i].toString()) === false) {
         message =
           'Пожалуйста проверьте, что хэш-тег начинается с символа # (решётка), хэш-теги разделяются пробелами, длина хештега не превышает 20 символов, также хеш-тег не может состоять только из одной решётки'
         ;
@@ -70,11 +71,11 @@ window.hashTags = (function () {
   };
 
   var checkValidity = function (element) {
-    var arrayOfTags;
+    var tags;
     var errorMessage;
     if (element === hashTagField) {
-      arrayOfTags = element.value.trim().split(/\s+/);
-      errorMessage = checkHashTagQuantity(element, arrayOfTags) || checkDuplicates(element, arrayOfTags) || checkHashTags(element, arrayOfTags);
+      tags = element.value.trim().split(/\s+/);
+      errorMessage = checkHashTagQuantity(element, tags) || checkDuplicates(element, tags) || checkHashTags(element, tags);
       element.setCustomValidity(errorMessage);
     } else if (element === textArea) {
       errorMessage = checkCommentaryLength(element);
@@ -106,8 +107,8 @@ window.hashTags = (function () {
     errorElement.classList.remove('hidden');
     errorElement.setAttribute('style', 'z-index: 111');
     errorElement.textContent = errorMessage;
-    window.utility.fragment.appendChild(errorElement);
-    document.appendChild(window.utility.fragment);
+    fragment.appendChild(errorElement);
+    document.appendChild(fragment);
   };
 
   var submitForm = function (evt) {

@@ -21,8 +21,8 @@ window.sorting = (function () {
     };
   };
 
-  var debouncedCreateNewTiles = debounce(function (sortingFunction, array) {
-    createNewTiles(sortingFunction, array);
+  var debouncedCreateNewTiles = debounce(function (sortingFunction, picturesArray) {
+    createNewTiles(sortingFunction, picturesArray);
   });
 
   var removeClass = function (block, classname) {
@@ -46,18 +46,18 @@ window.sorting = (function () {
 
   removeClass(filtersBlock, 'img-filters--inactive');
 
-  var createNewTiles = function (sortingFunction, array) {
+  var createNewTiles = function (sortingFunction, picturesArray) {
     var oldPictures = document.querySelectorAll('.picture__link');
     Array.from(oldPictures).forEach(function (element) {
       element.remove();
     });
-    window.smallRender.renderTile(sortingFunction(array));
+    window.smallRender.renderTile(sortingFunction(picturesArray));
     var smallPictures = document.querySelectorAll('.picture__link');
     window.renderBig.addBigPictureListener(smallPictures);
   };
 
-  var makeSorting = function (array) {
-    var copyOfArray = array.slice();
+  var makeSorting = function (picturesArray) {
+    var copyOfArray = picturesArray.slice();
 
     filterNew.addEventListener('click', function () {
       debouncedCreateNewTiles(makeSortByNew, copyOfArray);
@@ -70,7 +70,7 @@ window.sorting = (function () {
     });
 
     filterPopular.addEventListener('click', function () {
-      debouncedCreateNewTiles(makeNoSorting, array);
+      debouncedCreateNewTiles(makeNoSorting, picturesArray);
       switchActiveClass(filterPopular);
     });
   };
@@ -87,22 +87,22 @@ window.sorting = (function () {
     return array;
   }
 
-  var makeSortByNew = function (array) {
-    var tempArray = array.slice();
+  var makeSortByNew = function (picturesArray) {
+    var tempArray = picturesArray.slice();
     shuffle(tempArray).splice(NUMBER_OF_NEW);
     return tempArray;
   };
 
-  var makeSortByComments = function (array) {
-    var tempArray = array.slice();
+  var makeSortByComments = function (picturesArray) {
+    var tempArray = picturesArray.slice();
     tempArray.sort(function (right, left) {
       return left.comments.length - right.comments.length;
     });
     return tempArray;
   };
 
-  var makeNoSorting = function (array) {
-    return array;
+  var makeNoSorting = function (picturesArray) {
+    return picturesArray;
   };
 
   // var newOrderList = createNewList();

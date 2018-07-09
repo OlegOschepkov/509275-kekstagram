@@ -15,18 +15,18 @@ window.renderBig = (function () {
   var indexNumber = 0;
   var currentBigPicture;
 
-  var createNewElement = function (picture, commArray) {
-    for (indexNumber; indexNumber < commArray.length && indexNumber < maxIndexNumber; indexNumber++) {
-      var mockLi = bigPicture.querySelectorAll('.social__comment');
-      mockLi[0].classList.add('visually-hidden');
-      mockLi[1].classList.add('visually-hidden');
-      var listElem = document.createElement('li');
-      listElem.className = 'social__comment social__comment--text';
-      bigPictureBlocks.appendChild(listElem);
+  var createNewElement = function (picture, commentsArray) {
+    for (indexNumber; indexNumber < commentsArray.length && indexNumber < maxIndexNumber; indexNumber++) {
+      var unnecessaryBlock = bigPicture.querySelectorAll('.social__comment');
+      unnecessaryBlock[0].classList.add('visually-hidden');
+      unnecessaryBlock[1].classList.add('visually-hidden');
+      var listElement = document.createElement('li');
+      listElement.className = 'social__comment social__comment--text';
+      bigPictureBlocks.appendChild(listElement);
       var avatarAndText = document.createElement('img');
       var textBlock = document.createElement('p');
-      listElem.appendChild(avatarAndText);
-      listElem.appendChild(textBlock);
+      listElement.appendChild(avatarAndText);
+      listElement.appendChild(textBlock);
       avatarAndText.className = 'social__picture';
       avatarAndText.setAttribute('src', 'img/avatar-' + window.utility.getRandomInt(MIN_AVATAR_NUMBER, MAX_AVATAR_NUMBER) + '.svg');
       avatarAndText.setAttribute('alt', AVATAR_ALT);
@@ -40,7 +40,7 @@ window.renderBig = (function () {
       }
 
     }
-    return listElem;
+    return listElement;
   };
 
   var renderBigPicture = function (picture) {
