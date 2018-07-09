@@ -51,6 +51,7 @@ window.smallRender = (function () {
     renderTile(pictures);
     var smallPictures = document.querySelectorAll('.picture__link');
     window.renderBig.addBigPictureListener(smallPictures);
+    window.sorting.removeClass(window.sorting.filtersBlock, 'img-filters--inactive');
     window.sorting.makeSorting(pictures);
   };
 

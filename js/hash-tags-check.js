@@ -10,7 +10,7 @@ window.hashTags = (function () {
     .content
     .querySelectorAll('.img-upload__message');
   var errorWindow;
-  var fragment = document.createDocumentFragment();
+  // var fragment = document.createDocumentFragment();
 
   var findBlock = function () {
     Array.from(errorWindowTemplate).forEach(function (element) {

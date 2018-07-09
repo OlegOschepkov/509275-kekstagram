@@ -44,8 +44,6 @@ window.sorting = (function () {
     block.classList.add('img-filters__button--active');
   };
 
-  removeClass(filtersBlock, 'img-filters--inactive');
-
   var createNewTiles = function (sortingFunction, picturesArray) {
     var oldPictures = document.querySelectorAll('.picture__link');
     Array.from(oldPictures).forEach(function (element) {
@@ -109,6 +107,7 @@ window.sorting = (function () {
 
   return {
     makeSorting: makeSorting,
-    removeClass: removeClass
+    removeClass: removeClass,
+    filtersBlock: filtersBlock
   };
 })();
