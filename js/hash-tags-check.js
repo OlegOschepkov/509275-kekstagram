@@ -107,9 +107,11 @@ window.hashTags = (function () {
     errorElement.classList.remove('hidden');
     errorElement.setAttribute('style', 'z-index: 111');
     errorElement.textContent = errorMessage;
-    fragment.appendChild(errorElement);
-    document.appendChild(fragment);
+    // fragment.appendChild(errorElement);
+    form.appendChild(errorElement);
   };
+
+  // sendError('oops');
 
   var submitForm = function (evt) {
     window.backend.save(new FormData(form), sendSuccess, sendError);

@@ -39,6 +39,15 @@ window.backend = (function () {
         onFail('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
     });
+    xhr.addEventListener('error', function () {
+      onFail('Произошла ошибка соединения');
+    });
+    xhr.addEventListener('timeout', function () {
+      onFail('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+    });
+
+    xhr.timeout = RESPONSE_TIMEOUT; // 10s
+
 
     xhr.open('POST', URL_POST);
     xhr.send(data);
