@@ -1,12 +1,12 @@
 'use strict';
 
-(function () {
+window.upload = (function () {
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
   var fileChooser = document.querySelector('.img-upload__input');
   var preview = document.querySelector('.img-upload__preview');
   var userPicture = preview.querySelector('img');
 
-  fileChooser.addEventListener('change', function () {
+  var uploadFile = function () {
     var file = fileChooser.files[0];
     var fileName = file.name.toLowerCase();
 
@@ -22,5 +22,13 @@
       });
       reader.readAsDataURL(file);
     }
-  });
+  };
+
+  fileChooser.addEventListener('change', uploadFile);
+
+  return {
+    fileChooser: fileChooser,
+    userPicture: userPicture
+  };
+
 })();

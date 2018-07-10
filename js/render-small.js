@@ -6,6 +6,7 @@ window.smallRender = (function () {
     .content
     .querySelector('.picture__link');
   // similarListTemplate.setAttribute('data-index', 0);
+  var fragment = document.createDocumentFragment();
 
 
   var renderPhoto = function (picture) {
@@ -33,13 +34,13 @@ window.smallRender = (function () {
   //   return pics;
   // };
   //
-  var renderTile = function (array) {
-    array.forEach(function (element) {
-      window.utility.fragment.appendChild(renderPhoto(element));
+  var renderTile = function (pictures) {
+    pictures.forEach(function (element) {
+      fragment.appendChild(renderPhoto(element));
       // similarListTemplate.setAttribute();
       // setDataAttrib(similarListTemplate, element.indexForData);
     });
-    similarListElement.appendChild(window.utility.fragment);
+    similarListElement.appendChild(fragment);
   };
 
 
@@ -50,6 +51,7 @@ window.smallRender = (function () {
     renderTile(pictures);
     var smallPictures = document.querySelectorAll('.picture__link');
     window.renderBig.addBigPictureListener(smallPictures);
+    window.sorting.removeClass(window.sorting.filtersBlock, 'img-filters--inactive');
     window.sorting.makeSorting(pictures);
   };
 

@@ -35,7 +35,7 @@ window.slider = (function () {
     editorResize.updatePreviewStyle(utility.effectValue, utility.sizeValue);
   };
 
-  var sliderHandler = function (evt) {
+  var sliderListener = function (evt) {
     translatePinToEffect();
     renewStyle();
     var startCoords = {
@@ -51,16 +51,18 @@ window.slider = (function () {
       startCoords = {
         x: moveEvt.clientX
       };
+      var lineCoords = utility.scaleLine.getBoundingClientRect();
 
-      if (pinX < 0) {
+      if (startCoords.x < lineCoords.left) {
         utility.sliderPin.style.left = 0 + 'px';
-        startCoords.x = utility.scaleLine.left;
-        utility.sliderPin.removeEventListener('mousedown', sliderHandler);
-        utility.sliderPin.addEventListener('mousedown', sliderHandler);
-      } else if (pinX > utility.scaleLine.offsetWidth) {
+        startCoords.x = lineCoords.left;
+        // utility.sliderPin.removeEventListener('mousedown', sliderHandler);
+        // utility.sliderPin.addEventListener('mousedown', sliderHandler);
+      } else if (startCoords.x > lineCoords.right) {
         utility.sliderPin.style.left = utility.scaleLine.offsetWidth + 'px';
-        utility.sliderPin.removeEventListener('mousedown', sliderHandler);
-        utility.sliderPin.addEventListener('mousedown', sliderHandler);
+        startCoords.x = lineCoords.right;
+        // utility.sliderPin.removeEventListener('mousedown', sliderHandler);
+        // utility.sliderPin.addEventListener('mousedown', sliderHandler);
       } else {
         utility.sliderPin.style.left = (utility.sliderPin.offsetLeft - shift.x) + 'px';
       }
@@ -81,6 +83,8 @@ window.slider = (function () {
     document.addEventListener('mouseup', onMouseUp);
   };
 
-  utility.sliderPin.addEventListener('mousedown', sliderHandler);
-
+  return {
+    pinX: pinX,
+    sliderListener: sliderListener
+  };
 })();

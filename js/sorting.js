@@ -1,12 +1,12 @@
 'use strict';
 
 window.sorting = (function () {
-  var filtersBlock = document.querySelector('.img-filters');
   var NUMBER_OF_NEW = 10;
+  var DEBOUNCE_INTERVAL = 500;
+  var filtersBlock = document.querySelector('.img-filters');
   var filterPopular = filtersBlock.querySelector('#filter-popular');
   var filterNew = filtersBlock.querySelector('#filter-new');
   var filterDiscussed = filtersBlock.querySelector('#filter-discussed');
-  var DEBOUNCE_INTERVAL = 500;
 
   var debounce = function (fun) {
     var lastTimeout = null;
@@ -21,8 +21,8 @@ window.sorting = (function () {
     };
   };
 
-  var debouncedCreateNewTiles = debounce(function (sortingFunction, array) {
-    createNewTiles(sortingFunction, array);
+  var debouncedCreateNewTiles = debounce(function (sortingFunction, pictures) {
+    createNewTiles(sortingFunction, pictures);
   });
 
   var removeClass = function (block, classname) {
@@ -44,33 +44,31 @@ window.sorting = (function () {
     block.classList.add('img-filters__button--active');
   };
 
-  removeClass(filtersBlock, 'img-filters--inactive');
-
-  var createNewTiles = function (sortingFunction, array) {
+  var createNewTiles = function (sortingFunction, pictures) {
     var oldPictures = document.querySelectorAll('.picture__link');
     Array.from(oldPictures).forEach(function (element) {
       element.remove();
     });
-    window.smallRender.renderTile(sortingFunction(array));
+    window.smallRender.renderTile(sortingFunction(pictures));
     var smallPictures = document.querySelectorAll('.picture__link');
     window.renderBig.addBigPictureListener(smallPictures);
   };
 
-  var makeSorting = function (array) {
-    var copyOfArray = array.slice();
+  var makeSorting = function (pictures) {
+    var copyOfPictures = pictures.slice();
 
     filterNew.addEventListener('click', function () {
-      debouncedCreateNewTiles(makeSortByNew, copyOfArray);
+      debouncedCreateNewTiles(makeSortByNew, copyOfPictures);
       switchActiveClass(filterNew);
     });
 
     filterDiscussed.addEventListener('click', function () {
-      debouncedCreateNewTiles(makeSortByComments, copyOfArray);
+      debouncedCreateNewTiles(makeSortByComments, copyOfPictures);
       switchActiveClass(filterDiscussed);
     });
 
     filterPopular.addEventListener('click', function () {
-      debouncedCreateNewTiles(makeNoSorting, array);
+      debouncedCreateNewTiles(makeNoSorting, pictures);
       switchActiveClass(filterPopular);
     });
   };
@@ -87,27 +85,29 @@ window.sorting = (function () {
     return array;
   }
 
-  var makeSortByNew = function (array) {
-    var tempArray = array.slice();
-    shuffle(tempArray).splice(NUMBER_OF_NEW);
-    return tempArray;
+  var makeSortByNew = function (pictures) {
+    var tempPictures = pictures.slice();
+    shuffle(tempPictures).splice(NUMBER_OF_NEW);
+    return tempPictures;
   };
 
-  var makeSortByComments = function (array) {
-    var tempArray = array.slice();
-    tempArray.sort(function (right, left) {
+  var makeSortByComments = function (pictures) {
+    var tempPictures = pictures.slice();
+    tempPictures.sort(function (right, left) {
       return left.comments.length - right.comments.length;
     });
-    return tempArray;
+    return tempPictures;
   };
 
-  var makeNoSorting = function (array) {
-    return array;
+  var makeNoSorting = function (pictures) {
+    return pictures;
   };
 
   // var newOrderList = createNewList();
 
   return {
-    makeSorting: makeSorting
+    makeSorting: makeSorting,
+    removeClass: removeClass,
+    filtersBlock: filtersBlock
   };
 })();

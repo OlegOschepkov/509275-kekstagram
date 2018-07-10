@@ -1,5 +1,12 @@
 'use strict';
 window.renderBig = (function () {
+  var MIN_AVATAR_NUMBER = 1; // эти две переменные отвечают за подбор случайного аватара (в задании src="img/avatar-{{случайное число от 1 до 6}}.svg")
+  var MAX_AVATAR_NUMBER = 6;
+  var AVATAR_HEIGHT = 35;
+  var AVATAR_WIDTH = 35;
+  var AVATAR_ALT = 'Аватар комментатора фотографии';
+  var ESC_KEYCODE = 27;
+  var ENTER_KEYCODE = 13;
   var bigPicture = document.querySelector('.big-picture');
   var bigPictureBlocks = bigPicture.querySelector('.social__comments');
   bigPicture.querySelector('.close');
@@ -8,42 +15,45 @@ window.renderBig = (function () {
   var indexNumber = 0;
   var currentBigPicture;
 
-  var MIN_AVATAR_NUMBER = 1; // эти две переменные отвечают за подбор случайного аватара (в задании src="img/avatar-{{случайное число от 1 до 6}}.svg")
-  var MAX_AVATAR_NUMBER = 6;
-  var AVATAR_HEIGHT = 35;
-  var AVATAR_WIDTH = 35;
-  var AVATAR_ALT = 'Аватар комментатора фотографии';
-
-  var createNewElement = function (picture, commArray) {
-    for (indexNumber; indexNumber < commArray.length && indexNumber < maxIndexNumber; indexNumber++) {
-      var mockLi = bigPicture.querySelectorAll('.social__comment');
-      mockLi[0].classList.add('visually-hidden');
-      mockLi[1].classList.add('visually-hidden');
-      var listElem = document.createElement('li');
-      listElem.className = 'social__comment social__comment--text';
-      bigPictureBlocks.appendChild(listElem);
+  var createNewElement = function (picture, comments) {
+    for (indexNumber; indexNumber < comments.length && indexNumber < maxIndexNumber; indexNumber++) {
+      var unnecessaryBlock = bigPicture.querySelectorAll('.social__comment');
+      unnecessaryBlock[0].classList.add('visually-hidden');
+      unnecessaryBlock[1].classList.add('visually-hidden');
+      var listElement = document.createElement('li');
+      listElement.className = 'social__comment social__comment--text';
+      bigPictureBlocks.appendChild(listElement);
       var avatarAndText = document.createElement('img');
       var textBlock = document.createElement('p');
-      listElem.appendChild(avatarAndText);
-      listElem.appendChild(textBlock);
+      listElement.appendChild(avatarAndText);
+      listElement.appendChild(textBlock);
       avatarAndText.className = 'social__picture';
       avatarAndText.setAttribute('src', 'img/avatar-' + window.utility.getRandomInt(MIN_AVATAR_NUMBER, MAX_AVATAR_NUMBER) + '.svg');
       avatarAndText.setAttribute('alt', AVATAR_ALT);
       avatarAndText.setAttribute('width', AVATAR_HEIGHT);
       avatarAndText.setAttribute('height', AVATAR_WIDTH);
       textBlock.insertAdjacentHTML('afterBegin', picture.comments[indexNumber]);
+      if (maxIndexNumber >= picture.comments.length) {
+        loadMore.classList.add('hidden');
+      } else if (loadMore.classList.contains('hidden') && maxIndexNumber < picture.comments.length) {
+        loadMore.classList.remove('hidden');
+      }
+
     }
-    return listElem;
+    return listElement;
   };
 
   var renderBigPicture = function (picture) {
     bigPicture.querySelector('img').src = picture.url;
     bigPicture.querySelector('.comments-count').textContent = picture.comments.length;
     bigPicture.querySelector('.likes-count').textContent = picture.likes;
-    bigPicture.querySelector('.social__caption').textContent = picture.description;
+    bigPicture.querySelector('.social__caption').textContent = window.utility.getRandomElement(window.data.descriptions);
     bigPicture.classList.remove('hidden');
     document.querySelector('body').classList.add('modal-open');
     createNewElement(picture, picture.comments);
+    document.addEventListener('keydown', onPopupEscPress);
+    window.utility.findPopupCloseButton(bigPicture).addEventListener('click', closeBigPicture);
+    loadMore.addEventListener('click', loadMoreComments);
   };
 
   var getIndexAndRender = function (evt) {
@@ -67,20 +77,34 @@ window.renderBig = (function () {
     indexNumber = 0;
   };
 
-  window.utility.findPopupCloseButton(bigPicture).addEventListener('click', function () {
+  var closeBigPicture = function () {
     removeOldElements();
     window.utility.addClassHidden(bigPicture);
     document.querySelector('body').classList.remove('modal-open');
-  });
+    document.removeEventListener('keydown', onPopupEscPress);
+    window.utility.findPopupCloseButton(bigPicture).removeEventListener('click', closeBigPicture);
+    loadMore.removeEventListener('click', loadMoreComments);
+  };
 
-  loadMore.addEventListener('click', function () {
+
+  var onPopupEscPress = function (evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      closeBigPicture();
+    } else {
+      return;
+    }
+  };
+
+  var loadMoreComments = function () {
     maxIndexNumber = maxIndexNumber + 5;
     createNewElement(currentBigPicture, currentBigPicture.comments);
-  });
+  };
 
   return {
     addBigPictureListener: addBigPictureListener,
-    renderBigPicture: renderBigPicture
+    renderBigPicture: renderBigPicture,
+    ESC_KEYCODE: ESC_KEYCODE,
+    ENTER_KEYCODE: ENTER_KEYCODE
   };
 
 })();
