@@ -1,11 +1,10 @@
 'use strict';
 
-window.smallRender = (function () {
+window.renderSmall = (function () {
   var similarListElement = document.querySelector('.pictures');
   var similarListTemplate = document.querySelector('#picture')
     .content
     .querySelector('.picture__link');
-  // similarListTemplate.setAttribute('data-index', 0);
   var fragment = document.createDocumentFragment();
 
 
@@ -19,26 +18,9 @@ window.smallRender = (function () {
     return photoElement;
   };
 
-  // var setDataAttrib = function (element, index) {
-  //   element.setAttribute('data-index', index);
-  // };
-
-  // for (var j = 0; j < window.data.pictures.length; j++) {
-  //   window.utility.fragment.appendChild(renderPhoto(window.data.pictures[j]));
-  //   setDataAttrib(similarListTemplate, j);
-  // }
-  //
-  // similarListElement.appendChild(window.utility.fragment);
-  // var getCollection = function () {
-  //   var pics = document.querySelectorAll('.picture__link');
-  //   return pics;
-  // };
-  //
   var renderTile = function (pictures) {
     pictures.forEach(function (element) {
       fragment.appendChild(renderPhoto(element));
-      // similarListTemplate.setAttribute();
-      // setDataAttrib(similarListTemplate, element.indexForData);
     });
     similarListElement.appendChild(fragment);
   };
@@ -69,14 +51,6 @@ window.smallRender = (function () {
   window.data.loadData(getServerData);
   window.backend.load(onLoad, onError);
 
-  // var smallPictures;
-  // onLoad.complete = function () {
-  //   smallPictures = document.querySelectorAll('.picture__link');
-  //   console.log(smallPictures + ' later');
-  //   return smallPictures;
-  // };
-  //
-  //
   return {
     onError: onError,
     renderTile: renderTile

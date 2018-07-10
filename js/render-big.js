@@ -7,6 +7,7 @@ window.renderBig = (function () {
   var AVATAR_ALT = 'Аватар комментатора фотографии';
   var ESC_KEYCODE = 27;
   var ENTER_KEYCODE = 13;
+  var QUANTITY_OF_COMMENTS_DISPLAYED = 5;
   var bigPicture = document.querySelector('.big-picture');
   var bigPictureBlocks = bigPicture.querySelector('.social__comments');
   bigPicture.querySelector('.close');
@@ -14,6 +15,10 @@ window.renderBig = (function () {
   var maxIndexNumber = 5;
   var indexNumber = 0;
   var currentBigPicture;
+  var countOfCommentsBlock = bigPicture.querySelector('.social__comment-count');
+  var countOfCommentsText = countOfCommentsBlock.childNodes[0];
+  var commentsCount;
+
 
   var createNewElement = function (picture, comments) {
     for (indexNumber; indexNumber < comments.length && indexNumber < maxIndexNumber; indexNumber++) {
@@ -45,6 +50,12 @@ window.renderBig = (function () {
 
   var renderBigPicture = function (picture) {
     bigPicture.querySelector('img').src = picture.url;
+    if (picture.comments.length < QUANTITY_OF_COMMENTS_DISPLAYED) {
+      countOfCommentsText.nodeValue = picture.comments.length + ' из ';
+    } else {
+      countOfCommentsText.nodeValue = QUANTITY_OF_COMMENTS_DISPLAYED + ' из ';
+    }
+    commentsCount = picture.comments.length;
     bigPicture.querySelector('.comments-count').textContent = picture.comments.length;
     bigPicture.querySelector('.likes-count').textContent = picture.likes;
     bigPicture.querySelector('.social__caption').textContent = window.utility.getRandomElement(window.data.descriptions);
@@ -52,8 +63,8 @@ window.renderBig = (function () {
     document.querySelector('body').classList.add('modal-open');
     createNewElement(picture, picture.comments);
     document.addEventListener('keydown', onPopupEscPress);
-    window.utility.findPopupCloseButton(bigPicture).addEventListener('click', closeBigPicture);
-    loadMore.addEventListener('click', loadMoreComments);
+    window.utility.findPopupCloseButton(bigPicture).addEventListener('click', onClosePress);
+    loadMore.addEventListener('click', onLoadMore);
   };
 
   var getIndexAndRender = function (evt) {
@@ -77,26 +88,28 @@ window.renderBig = (function () {
     indexNumber = 0;
   };
 
-  var closeBigPicture = function () {
+  var onClosePress = function () {
     removeOldElements();
     window.utility.addClassHidden(bigPicture);
     document.querySelector('body').classList.remove('modal-open');
     document.removeEventListener('keydown', onPopupEscPress);
-    window.utility.findPopupCloseButton(bigPicture).removeEventListener('click', closeBigPicture);
-    loadMore.removeEventListener('click', loadMoreComments);
+    window.utility.findPopupCloseButton(bigPicture).removeEventListener('click', onClosePress);
+    loadMore.removeEventListener('click', onLoadMore);
   };
 
 
   var onPopupEscPress = function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
-      closeBigPicture();
-    } else {
-      return;
+      onClosePress();
     }
   };
 
-  var loadMoreComments = function () {
-    maxIndexNumber = maxIndexNumber + 5;
+  var onLoadMore = function () {
+    maxIndexNumber = maxIndexNumber + QUANTITY_OF_COMMENTS_DISPLAYED;
+    if (maxIndexNumber > commentsCount) {
+      maxIndexNumber = commentsCount;
+    }
+    countOfCommentsText.nodeValue = maxIndexNumber + ' из ';
     createNewElement(currentBigPicture, currentBigPicture.comments);
   };
 

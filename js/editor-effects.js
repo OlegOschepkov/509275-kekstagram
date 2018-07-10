@@ -1,6 +1,5 @@
 'use strict';
 window.editorEffects = (function () {
-  // Применение эффекта и изменение размера
   var effect = document.querySelectorAll('.effects__item');
   var sliderBlock = document.querySelector('.img-upload__scale');
   sliderBlock.classList.add('hidden');
@@ -97,13 +96,6 @@ window.editorEffects = (function () {
     utility.effectValue = newStyle;
     return newStyle;
   };
-  // var chooseCustom = function (to, from) {
-  //   var choosen = Math.floor(Math.random() * (to - from + 1) + from);
-  //   console.log(choosen + ' choosen');
-  //
-  //   return choosen;
-  // };
-
 
   return {
     setNewStyle: setNewStyle,

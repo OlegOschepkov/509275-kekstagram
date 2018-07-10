@@ -35,7 +35,7 @@ window.slider = (function () {
     editorResize.updatePreviewStyle(utility.effectValue, utility.sizeValue);
   };
 
-  var sliderListener = function (evt) {
+  var onSliderMove = function (evt) {
     translatePinToEffect();
     renewStyle();
     var startCoords = {
@@ -56,13 +56,9 @@ window.slider = (function () {
       if (startCoords.x < lineCoords.left) {
         utility.sliderPin.style.left = 0 + 'px';
         startCoords.x = lineCoords.left;
-        // utility.sliderPin.removeEventListener('mousedown', sliderHandler);
-        // utility.sliderPin.addEventListener('mousedown', sliderHandler);
       } else if (startCoords.x > lineCoords.right) {
         utility.sliderPin.style.left = utility.scaleLine.offsetWidth + 'px';
         startCoords.x = lineCoords.right;
-        // utility.sliderPin.removeEventListener('mousedown', sliderHandler);
-        // utility.sliderPin.addEventListener('mousedown', sliderHandler);
       } else {
         utility.sliderPin.style.left = (utility.sliderPin.offsetLeft - shift.x) + 'px';
       }
@@ -85,6 +81,6 @@ window.slider = (function () {
 
   return {
     pinX: pinX,
-    sliderListener: sliderListener
+    onSliderMove: onSliderMove
   };
 })();

@@ -12,19 +12,13 @@ window.utility = (function () {
     effectValue: '',
     previewImgBlock: document.querySelector('.img-upload__preview'),
     slider: document.querySelector('.img-upload__scale'),
-    // sliderCoords: document.querySelector('.img-upload__scale').getBoundingClientRect(),
     sizeValue: '',
     sliderPin: document.querySelector('.scale__pin'),
-    // pinCoords: document.querySelector('.scale__pin').getBoundingClientRect(),
     scaleLine: document.querySelector('.scale__line'),
     scaleLevel: document.querySelector('.scale__level'),
     getProportion: function () {
       var percentage = Math.floor(100 / (window.utility.scaleLine.offsetWidth / window.utility.sliderPin.offsetLeft));
-      if (percentage < 0) {
-        percentage = 0;
-      } else if (percentage > 100) {
-        percentage = 100;
-      }
+      percentage = Math.max(0, Math.min(100, percentage));
       return percentage;
     },
     valueSize: document.querySelector('.resize__control--value'),
