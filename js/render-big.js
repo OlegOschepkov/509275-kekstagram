@@ -52,7 +52,7 @@ window.renderBig = (function () {
     document.querySelector('body').classList.add('modal-open');
     createNewElement(picture, picture.comments);
     document.addEventListener('keydown', onPopupEscPress);
-    window.utility.findPopupCloseButton(bigPicture).addEventListener('click', closeBigPicture);
+    window.utility.findPopupCloseButton(bigPicture).addEventListener('click', onClosePress);
     loadMore.addEventListener('click', loadMoreComments);
   };
 
@@ -77,21 +77,19 @@ window.renderBig = (function () {
     indexNumber = 0;
   };
 
-  var closeBigPicture = function () {
+  var onClosePress = function () {
     removeOldElements();
     window.utility.addClassHidden(bigPicture);
     document.querySelector('body').classList.remove('modal-open');
     document.removeEventListener('keydown', onPopupEscPress);
-    window.utility.findPopupCloseButton(bigPicture).removeEventListener('click', closeBigPicture);
+    window.utility.findPopupCloseButton(bigPicture).removeEventListener('click', onClosePress);
     loadMore.removeEventListener('click', loadMoreComments);
   };
 
 
   var onPopupEscPress = function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
-      closeBigPicture();
-    } else {
-      return;
+      onClosePress();
     }
   };
 

@@ -5,6 +5,7 @@ window.upload = (function () {
   var fileChooser = document.querySelector('.img-upload__input');
   var preview = document.querySelector('.img-upload__preview');
   var userPicture = preview.querySelector('img');
+  var effectPreview = Array.from(document.querySelectorAll('.effects__preview'));
 
   var uploadFile = function () {
     var file = fileChooser.files[0];
@@ -19,6 +20,9 @@ window.upload = (function () {
 
       reader.addEventListener('load', function () {
         userPicture.src = reader.result;
+        effectPreview.forEach(function (element) {
+          element.setAttribute('style', 'background-image: url(' + userPicture.src + ')');
+        });
       });
       reader.readAsDataURL(file);
     }

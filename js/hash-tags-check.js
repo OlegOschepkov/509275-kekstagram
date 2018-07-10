@@ -1,5 +1,5 @@
 'use strict';
-window.hashTags = (function () {
+window.hashTagsCheck = (function () {
   var MAX_HASH_QUANTITY = 5;
   var MAX_COMMENTARY_LENGTH = 140;
   var textArea = document.querySelector('.text__description');
@@ -10,9 +10,9 @@ window.hashTags = (function () {
     .querySelectorAll('.img-upload__message');
   var errorWindow;
 
-  var findBlock = function () {
-    Array.from(errorWindowTemplate).forEach(function (element) {
-      if (element.classList.contains('img-upload__message--error')) {
+  var findBlock = function (block, className) {
+    Array.from(block).forEach(function (element) {
+      if (element.classList.contains(className)) {
         errorWindow = element;
       }
     });
@@ -28,42 +28,30 @@ window.hashTags = (function () {
 
   var checkCommentaryLength = function (element) {
     var letters = element.value.split('');
-    var message = '';
-    if (letters.length > MAX_COMMENTARY_LENGTH) {
-      message = 'Максимальная длина комментария - 140 символов';
-    }
+    var message = (letters.length > MAX_COMMENTARY_LENGTH) ? 'Максимальная длина комментария - 140 символов' : '';
     return message;
   };
 
   var checkHashTagQuantity = function (element, tags) {
-    var message = '';
-    if (tags.length > MAX_HASH_QUANTITY) {
-      message = 'Максимальное количество хешгетов - 5. Удалите один или несколько хешгетов';
-    }
+    var message = (tags.length > MAX_HASH_QUANTITY) ? 'Максимальное количество хешгетов - 5. Удалите один или несколько хешгетов' : '';
     return message;
   };
 
   var checkDuplicates = function (element, tags) {
-    var message = '';
     tags.sort();
     for (var i = 0; i < tags.length - 1; i++) {
-      if (String(tags[i]).toUpperCase() === String(tags[i + 1]).toUpperCase()) {
-        message = 'один и тот же хэш-тег не может быть использован дважды';
-      }
+      var message = (String(tags[i]).toUpperCase() === String(tags[i + 1]).toUpperCase()) ? 'один и тот же хэш-тег не может быть использован дважды' : '';
     }
     return message;
   };
 
   var checkHashTags = function (element, tags) {
-    var message = '';
     var regExp = /^#[^\s]{1,19}$/i;
     for (var i = 0; i < tags.length; i++) {
-      if (regExp.test(tags[i].toString()) === false) {
-        message =
-          'Пожалуйста проверьте, что хэш-тег начинается с символа # (решётка), хэш-теги разделяются пробелами, длина хештега не превышает 20 символов, также хеш-тег не может состоять только из одной решётки'
-        ;
-        break;
-      }
+      var message = (!regExp.test(tags[i].toString())) ?
+        'Пожалуйста проверьте, что хэш-тег начинается с символа # (решётка), хэш-теги разделяются пробелами, длина хештега не превышает 20 символов, также хеш-тег не может состоять только из одной решётки'
+        : '';
+      break;
     }
     return message;
   };
@@ -86,7 +74,7 @@ window.hashTags = (function () {
     }
   };
 
-  var elementChecking = function (evt) {
+  var onElementInput = function (evt) {
     if (evt.target.value !== '') {
       checkValidity(evt.target);
     } else {
@@ -95,12 +83,16 @@ window.hashTags = (function () {
     }
   };
 
-  var sendSuccess = function () {
+  var onSuccess = function () {
     window.editorResize.imageEditor.classList.add('hidden');
+    var oldErrors = document.querySelectorAll('.img-upload__message--error');
+    Array.from(oldErrors).forEach(function (element) {
+      element.remove();
+    });
   };
 
-  var sendError = function (errorMessage) {
-    findBlock();
+  var onError = function (errorMessage) {
+    findBlock(errorWindowTemplate, 'img-upload__message--error');
     var errorElement = errorWindow.cloneNode(true);
     errorElement.classList.remove('hidden');
     errorElement.setAttribute('style', 'z-index: 111');
@@ -108,17 +100,17 @@ window.hashTags = (function () {
     form.appendChild(errorElement);
   };
 
-  var submitForm = function (evt) {
-    window.backend.save(new FormData(form), sendSuccess, sendError);
+  var onSubmitForm = function (evt) {
+    window.backend.save(new FormData(form), onSuccess, onError);
     evt.preventDefault();
   };
 
   return {
     hashTagField: hashTagField,
     textArea: textArea,
-    submitForm: submitForm,
+    onSubmitForm: onSubmitForm,
     form: form,
-    elementChecking: elementChecking
+    onElementInput: onElementInput
   };
 
 })();

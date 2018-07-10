@@ -49,7 +49,7 @@ window.sorting = (function () {
     Array.from(oldPictures).forEach(function (element) {
       element.remove();
     });
-    window.smallRender.renderTile(sortingFunction(pictures));
+    window.renderSmall.renderTile(sortingFunction(pictures));
     var smallPictures = document.querySelectorAll('.picture__link');
     window.renderBig.addBigPictureListener(smallPictures);
   };
@@ -73,7 +73,7 @@ window.sorting = (function () {
     });
   };
 
-  function shuffle(array) {
+  var shuffle = function (array) {
     var randomIndex;
     var temp;
     for (var i = array.length - 1; i > 0; i--) {
@@ -83,7 +83,7 @@ window.sorting = (function () {
       array[randomIndex] = temp;
     }
     return array;
-  }
+  };
 
   var makeSortByNew = function (pictures) {
     var tempPictures = pictures.slice();
@@ -102,8 +102,6 @@ window.sorting = (function () {
   var makeNoSorting = function (pictures) {
     return pictures;
   };
-
-  // var newOrderList = createNewList();
 
   return {
     makeSorting: makeSorting,
