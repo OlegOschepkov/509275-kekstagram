@@ -34,8 +34,8 @@ window.smallRender = (function () {
   //   return pics;
   // };
   //
-  var renderTile = function (picturesArray) {
-    picturesArray.forEach(function (element) {
+  var renderTile = function (pictures) {
+    pictures.forEach(function (element) {
       fragment.appendChild(renderPhoto(element));
       // similarListTemplate.setAttribute();
       // setDataAttrib(similarListTemplate, element.indexForData);

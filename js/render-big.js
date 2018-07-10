@@ -15,8 +15,8 @@ window.renderBig = (function () {
   var indexNumber = 0;
   var currentBigPicture;
 
-  var createNewElement = function (picture, commentsArray) {
-    for (indexNumber; indexNumber < commentsArray.length && indexNumber < maxIndexNumber; indexNumber++) {
+  var createNewElement = function (picture, comments) {
+    for (indexNumber; indexNumber < comments.length && indexNumber < maxIndexNumber; indexNumber++) {
       var unnecessaryBlock = bigPicture.querySelectorAll('.social__comment');
       unnecessaryBlock[0].classList.add('visually-hidden');
       unnecessaryBlock[1].classList.add('visually-hidden');

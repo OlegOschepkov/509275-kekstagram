@@ -130,8 +130,8 @@ window.data = (function () {
 
   return {
     loadData: loadData,
-    countComments: function (commentsArray) {
-      return commentsArray.length;
+    countComments: function (comments) {
+      return comments.length;
     },
     COUNT_OF_PICTURES: COUNT_OF_PICTURES,
     descriptions: descriptions
