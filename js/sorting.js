@@ -55,15 +55,15 @@ window.sorting = (function () {
   };
 
   var makeSorting = function (pictures) {
-    var copyOfArray = pictures.slice();
+    var copyOfPictures = pictures.slice();
 
     filterNew.addEventListener('click', function () {
-      debouncedCreateNewTiles(makeSortByNew, copyOfArray);
+      debouncedCreateNewTiles(makeSortByNew, copyOfPictures);
       switchActiveClass(filterNew);
     });
 
     filterDiscussed.addEventListener('click', function () {
-      debouncedCreateNewTiles(makeSortByComments, copyOfArray);
+      debouncedCreateNewTiles(makeSortByComments, copyOfPictures);
       switchActiveClass(filterDiscussed);
     });
 
@@ -86,17 +86,17 @@ window.sorting = (function () {
   }
 
   var makeSortByNew = function (pictures) {
-    var tempArray = pictures.slice();
-    shuffle(tempArray).splice(NUMBER_OF_NEW);
-    return tempArray;
+    var tempPictures = pictures.slice();
+    shuffle(tempPictures).splice(NUMBER_OF_NEW);
+    return tempPictures;
   };
 
   var makeSortByComments = function (pictures) {
-    var tempArray = pictures.slice();
-    tempArray.sort(function (right, left) {
+    var tempPictures = pictures.slice();
+    tempPictures.sort(function (right, left) {
       return left.comments.length - right.comments.length;
     });
-    return tempArray;
+    return tempPictures;
   };
 
   var makeNoSorting = function (pictures) {
