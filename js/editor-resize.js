@@ -7,7 +7,6 @@ window.editorResize = (function () {
   var quantity = window.utility.DEFAULT_QUANTITY;
   var uploadFile = document.querySelector('#upload-file');
   var imageEditor = document.querySelector('.img-upload__overlay');
-  // imageEditor.classList.remove('hidden');
   var utility = window.utility;
 
   var minusSize = document.querySelector('.resize__control--minus');
@@ -19,21 +18,21 @@ window.editorResize = (function () {
     imageEditor.classList.remove('hidden');
     document.addEventListener('keydown', onEscPress);
     window.editorEffects.sliderBlock.classList.add('hidden');
-    utility.findPopupCloseButton(imageEditor).addEventListener('click', closeEditor);
+    utility.findPopupCloseButton(imageEditor).addEventListener('click', onEditorClose);
     minusSize.addEventListener('click', onSizeClickMinus);
     plusSize.addEventListener('click', onSizeClickPlus);
-    window.hashTags.form.addEventListener('submit', window.hashTags.submitForm);
-    imageEditor.addEventListener('input', window.hashTags.elementChecking);
-    utility.sliderPin.addEventListener('mousedown', window.slider.sliderListener);
+    window.hashTagsCheck.form.addEventListener('submit', window.hashTagsCheck.onSubmitForm);
+    imageEditor.addEventListener('input', window.hashTagsCheck.onElementInput);
+    utility.sliderPin.addEventListener('mousedown', window.slider.onSliderMove);
   });
 
   var onEscPress = function (evt) {
-    if (evt.target !== window.hashTags.hashTagField && evt.target !== window.hashTags.textArea && evt.keyCode === window.renderBig.ESC_KEYCODE) {
-      closeEditor();
+    if (evt.target !== window.hashTagsCheck.hashTagField && evt.target !== window.hashTagsCheck.textArea && evt.keyCode === window.renderBig.ESC_KEYCODE) {
+      onEditorClose();
     }
   };
 
-  var closeEditor = function () {
+  var onEditorClose = function () {
     imageEditor.removeAttribute('value');
     window.editorEffects.clearClassAndStyle(previewImg);
     setValueSize(utility.DEFAULT_QUANTITY);
@@ -44,11 +43,11 @@ window.editorResize = (function () {
     document.removeEventListener('keydown', onEscPress);
     minusSize.removeEventListener('click', onSizeClickMinus);
     plusSize.removeEventListener('click', onSizeClickPlus);
-    utility.findPopupCloseButton(imageEditor).removeEventListener('click', closeEditor);
-    window.hashTags.form.removeEventListener('submit', window.hashTags.submitForm);
-    imageEditor.removeEventListener('input', window.hashTags.elementChecking);
+    utility.findPopupCloseButton(imageEditor).removeEventListener('click', onEditorClose);
+    window.hashTagsCheck.form.removeEventListener('submit', window.hashTagsCheck.onSubmitForm);
+    imageEditor.removeEventListener('input', window.hashTagsCheck.onElementInput);
     window.upload.userPicture.setAttribute('src', 'img/upload-default-image.jpg');
-    utility.sliderPin.removeEventListener('mousedown', window.slider.sliderListener);
+    utility.sliderPin.removeEventListener('mousedown', window.slider.onSliderMove);
   };
 
 
@@ -112,7 +111,7 @@ window.editorResize = (function () {
     previewImg: previewImg,
     setNewSize: setNewSize,
     imageEditor: imageEditor,
-    closeEditor: closeEditor
+    onEditorClose: onEditorClose
   };
 
 })();
